@@ -1,10 +1,26 @@
 const styles = require("../styles/player.module.scss")
 const $ = require("jquery");
 const React = require("react");
+const DownloadDoneIcon = require('@mui/icons-material/DownloadDoneRounded');
+const DownloadIcon =  require('@mui/icons-material/FileDownloadRounded');
+const YouTubeIcon = require('@mui/icons-material/YouTube');
+const IconButton =  require('@mui/material/IconButton');
+const PlayIcon = require('@mui/icons-material/PlayCircle');
+const CircularProgress = require('@mui/material/CircularProgress');
+
+const {parseTimeFromSeconds} = require("../lib/timeparser")
 //const [searchResult, setSearchResult] = React.useState("test");
 var searchResult = "";
 function setSearchResult(data){
     searchResult = data;
+}
+//temporary function declaration for deployment test
+function addAndPlay(){
+
+}
+
+function downloadSong(){
+
 }
 
 async function searchSong(){
