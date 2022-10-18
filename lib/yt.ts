@@ -1,3 +1,4 @@
+import ytdl from 'ytdl-core'
 class YtVideoResponse{
     videoId:string
     title:string
@@ -16,6 +17,21 @@ class YtVideoResponse{
         this.needProxy = needProxy
     }
 }
+
+export async function fetchAudioInfoYtdl(url:string):Promise<YtVideoResponse>{
+    var info:ytdl.videoInfo = await ytdl.getInfo(url); 
+    let audioFormats = ytdl.filterFormats(info.formats,'audioonly');
+    var needProxy = false;
+    for(var i = 0; i < audioFormats.length ; i++){
+        if(/gcr=/.test(audioFormats[i].url)){
+            needProxy = true;
+            break;
+        }
+    }
+
+    return  new YtVideoResponse( info.videoDetails.videoId,info.videoDetails.title,info.videoDetails.lengthSeconds,info.videoDetails.thumbnails[info.videoDetails.lengthSeconds,info.videoDetails.thumbnails.length-1].url,info.videoDetails.author.name,audioFormats,needProxy);
+}
+
 
 export async function fetchAudioInfo(url:string):Promise<YtVideoResponse>{
     var InitialDataRegex = new RegExp(/ytInitialPlayerResponse = ({.+});</);

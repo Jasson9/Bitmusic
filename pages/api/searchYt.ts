@@ -5,7 +5,9 @@ import { SearchKeyword } from "../../lib/SearchYoutubeAPI";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     //var id = new String(req.cookie('id'))?.toString();
-    var data:any = await SearchKeyword(req.body.query);
+    var body = JSON.parse(req.body);
+    console.log(body.query)
+    var data:any = await SearchKeyword(body.query);
     if(data!=null){
         res.status(200).json({data})
     }else{

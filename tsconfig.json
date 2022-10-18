@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/searchres.js", "components/searchres.js", "components/searchres.js", "components/searchres.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/search.js", "components/search.js", "components/search.js", "components/search.js"],
   "exclude": ["node_modules"]
 }

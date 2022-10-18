@@ -47,8 +47,6 @@ async function SearchKeyword(keyword:string):Promise<Array<any>> {
         }
     }
     var videos = [];
-    console.log(rendercontents);
-    console.log(rendercontents[0]?.itemSectionRenderer?.contents);
     for(var i = 0; i < result.length; i++){
     if(result[i]?.videoRenderer?.title?.runs[0]?.text&&result[i]?.videoRenderer?.thumbnail?.thumbnails[0]?.url&&result[i]?.videoRenderer?.ownerText?.runs[0]?.text&&result[i]?.videoRenderer?.videoId&&result[i]?.videoRenderer?.lengthText?.simpleText){
         videos.push({
