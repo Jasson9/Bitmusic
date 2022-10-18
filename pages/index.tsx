@@ -6,47 +6,29 @@ import type { NextPage } from 'next'
 import styles from '../styles/player.module.scss'
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Slider from '@mui/material/Slider';
-import VolumeUp from '@mui/icons-material/VolumeUp';
-import VolumeOff from '@mui/icons-material/VolumeOff';
 import IconButton from '@mui/material/IconButton';
-import PlayIcon from '@mui/icons-material/PlayCircle';
-import PauseIcon from '@mui/icons-material/PauseCircle';
-import NextIcon from '@mui/icons-material/SkipNextRounded';
-import PreviousIcon from '@mui/icons-material/SkipPreviousRounded';
-import Grid from '@mui/material/Grid';
 import { parseTimeFromSeconds } from '../lib/timeparser';
 import Input from '@mui/material/Input';
 import SearchIcon from '@mui/icons-material/Search';
-import { YtVideoResponse } from '../lib/yt';
 import CircularProgress from '@mui/material/CircularProgress';
-import Popper from '@mui/material/Popper';
-import Fade from '@mui/material/Fade';
-import QueueMusicIcon from '@mui/icons-material/QueueMusicRounded';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { SongMetaData } from '../lib/interfaces';
-import $ from 'jquery';
-import {SearchResultComponent} from '../components/search.js'
-import PlayerComponent from '../components/player.js'
+//import {SearchResultComponent} from '../components/search.js'
+import dynamic from 'next/dynamic';
 export const Home: NextPage = (props:any) => {
-    /**
-const SearchPage = dynamic(() => import('../components/search.js').then(res=>{
-    return res.SearchResultComponent
-})) */
+const SearchResultComponent = dynamic(()=> import('../components/search.js'));
+const PlayerComponent = dynamic(() => import('../components/player.js'));
+const PlaylistComponent = dynamic(() => import('../components/playlist.js'));
 const [hasMounted, setHasMounted] = React.useState(false);
 React.useEffect(() => {
   setHasMounted(true);
 }, [])
-const [isStopped, setStop] = React.useState(1);//for playlist later
 const [onMobile, setOnMobile] = React.useState<boolean>(false);
 const [playList, setPlaylist] = React.useState<SongMetaData[]>([]);
-const [playListIndex, setPlaylistIndex] = React.useState<number>(0);
-const [playlistElement,setPlaylistElement] = React.useState<any>(null);
-const [windowHeight,setWindowHeight] = React.useState<number>();
+const [playlistElement,setPlaylistElement] = React.useState<any>(<PlaylistComponent/>);
 const [searchResult,setsearchResult] = React.useState<any>(<SearchResultComponent/>);
 const [player,setPlayer] = React.useState<any>(<PlayerComponent url={props.url}/>);
 
-
+/**
 React.useEffect(()=>{
     console.log(playList);
     setPlaylistElement(<div id="playlistcontent" className={styles.playlist}>
@@ -63,7 +45,7 @@ React.useEffect(()=>{
     
 </div>)
 },[playList])
-
+ */
 
 //var searchResult = [];
 
@@ -95,11 +77,7 @@ React.useEffect(()=>{
     console.log(navigator.userAgent)
     //on mobile
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 540 ) {
-        document.querySelector("."+styles.playlistcontainer)?.setAttribute("hidden","");
-        document.querySelector("#volumeslider")?.setAttribute("hidden","");
-        document.querySelector("."+styles.musicMetaDataContainer)?.setAttribute("hidden","");
-        document.querySelector("#songMetaDataContainerAlt")?.removeAttribute("hidden");
-        document.querySelector("#sideButtonsAlt")?.removeAttribute("hidden");
+        document.getElementById("playlistcontainer")?.setAttribute("hidden","");
         document.querySelector("#resultpad")?.setAttribute("style","padding-top:50px");
         //setPlayer(<PlayerComponent onMobile={true}/>)
         //document.getElementById("volumeon")?.setAttribute("onClick",`${changeVolume.name}(null,0)`);
@@ -107,17 +85,13 @@ React.useEffect(()=>{
         setOnMobile(true);
        }else{//on desktop
             setOnMobile(false);//songMetaDataContainerAlt
-            document.querySelector("#sideButtonsAlt")?.setAttribute("hidden","");
-            document.querySelector("#songMetaDataContainerAlt")?.setAttribute("hidden","")
-            document.querySelector("."+styles.musicMetaDataContainer)?.removeAttribute("hidden")
-            document.querySelector("."+styles.playlistcontainer)?.removeAttribute("hidden");
-            document.querySelector("#volumeslider")?.removeAttribute("hidden");
-            document.querySelector("#resultpad")?.removeAttribute("style");
+            document.getElementById("resultpad")?.removeAttribute("style");
+            document.getElementById("playlistcontainer")?.removeAttribute("hidden");
             //setPlayer(<PlayerComponent onMobile={false}/>)
         }
     console.log(window.innerHeight)
     console.log(window.innerWidth)
-},[onMobile,windowHeight])
+})
 
 function Search(){
     var query:any = document.getElementById("searchinput");

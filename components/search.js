@@ -1,3 +1,4 @@
+
 import styles from "../styles/player.module.scss";
 import DownloadDoneIcon from "@mui/icons-material/DownloadDoneRounded";
 import {useState,useEffect} from "react";
@@ -10,6 +11,7 @@ import {parseTimeFromSeconds} from "../lib/timeparser";
 import {Home} from '../pages/index'
 import {db} from './db'
 import {getAudioInfo, fetchAudio} from './util'
+import {deleteSong, getPlaylist, setPlaylist, addSong} from './db'
 
 async function downloadSong(url){
     console.log(url);
@@ -44,9 +46,7 @@ async function downloadSong(url){
     }
 }
 
-async function addToPlaylist(){
 
-}
 
 async function UsePlay(url){
     console.log("play called "+url);
@@ -71,6 +71,16 @@ const UseSearchSong=(props)=>{
 
     if(keyword != props.keyword){
         setKeyword(props.keyword);
+    }
+    async function addToPlaylist(index){
+        console.log("play called "+index);
+        document?.getElementById("StartplayButton-"+results[index].url)?.setAttribute("hidden","");
+        document?.getElementById("LoadingPlayIcon-"+results[index].url)?.removeAttribute("hidden");
+        addSong(results[index].url,results[index].title,results[index].author,results[index].thumbnail,results[index].duration)
+        //window.localStorage.setItem("url",url)
+        document.getElementById("LoadingPlayIcon-"+results[index].url)?.setAttribute("hidden","");
+        document.getElementById("StartplayButton-"+results[index].url)?.removeAttribute("hidden");
+        return
     }
     useEffect(()=>{
         const getVideo = async (keyword)=>{
@@ -113,7 +123,7 @@ const UseSearchSong=(props)=>{
                 <div className={styles.resultAuthor}>{res.author}</div>
                 </div>
             <div className={styles.resulticons}>
-            <div id={"StartplayButton-"+res.url} onClick={()=>UsePlay(res.url)}>
+            <div id={"StartplayButton-"+res.url} onClick={()=>addToPlaylist(key)}>
                 <IconButton>
                     <PlayIcon/>
                 </IconButton>
@@ -148,14 +158,8 @@ const UseSearchSong=(props)=>{
     </div>
     )
 }
-export function SearchResultComponent(props) {
-    if(props?.keyword){
-        return(
-            <UseSearchSong keyword={props.keyword}/>
-        )
-    }else{
-        return (
-            <UseSearchSong />
-    ); 
-    }
+export default function SearchResultComponent(props) {
+    return(
+        <UseSearchSong keyword={props?.keyword}/>
+    )
 }

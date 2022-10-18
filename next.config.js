@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
+//disable StrictMode
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   swcMinify: true,
 }
 

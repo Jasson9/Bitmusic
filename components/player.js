@@ -17,27 +17,28 @@ import React,{ useEffect , useState} from 'react';
 import styles from '../styles/player.module.scss'
 import { parseTimeFromSeconds } from '../lib/timeparser';
 import {Player} from './util'
-import {db} from './db'
+import {addSong,getPlaylist,deleteSong} from './db'
 import {getAudioInfo,fetchAudio} from './util'
 
 export default class PlayerComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-        isPlaying: false,
-        thumbnail:"",
-        elapsedTime:0,
-        songLength:0,
-        url: localStorage.getItem('url') || "",
-        volume:30,
-        title:"",
-        author:"", 
-        open :false,
-        anchorEl:null,
-        canBeOpen : this.open && Boolean(anchorEl),
-        id : this.canBeOpen ? 'transition-popper' : undefined,
-        onMobile :null,
-        mp4url:""
+            isPlaying: false,
+            thumbnail:"",
+            elapsedTime:0,
+            songLength:0,
+            url: "",
+            volume:30,
+            title:"",
+            author:"", 
+            open :false,
+            anchorEl:null,
+            canBeOpen : this.open && Boolean(anchorEl),
+            id : this.canBeOpen ? 'transition-popper' : undefined,
+            onMobile :null,
+            isStopped: true,
+            webmurl:""
         };
         this.updateSongLength = this.updateSongLength.bind(this);
         this.updateElapseTime = this.updateElapseTime.bind(this);
@@ -51,12 +52,14 @@ export default class PlayerComponent extends React.Component {
         //this.directPlay = this.directPlay.bind(this);
         this.changePlaybackTime = this.changePlaybackTime.bind(this);
         this.fetchSongData = this.fetchSongData.bind(this);
+        this.startPlay = this.startPlay.bind(this);
+        this.onEnd = this.onEnd.bind(this);
+        this.nextSong = this.nextSong.bind(this);
     }
-    async fetchSongData(url){
+    async fetchSongData(url,autoplay){
         if(url){
-            document?.getElementById("StartplayButton-"+url)?.setAttribute("hidden","");
-            document?.getElementById("LoadingPlayIcon-"+url)?.removeAttribute("hidden");
                 var res = await getAudioInfo(url);
+                var audioitag;
                 var webm= [];
                 var mp4;
                 res.formats.forEach((format)=>{
@@ -72,7 +75,6 @@ export default class PlayerComponent extends React.Component {
                 var sourceurl;
                 if(res.needProxy){
                     console.log("using Proxy "+res.videoId);
-                    var audioitag;
                     var source;
                     if(audioelm?.canPlayType('audio/webm')&&webm.length>=1){
                         audioitag = webm[webm.length-1].itag;
@@ -89,9 +91,11 @@ export default class PlayerComponent extends React.Component {
                     if(audioelm?.canPlayType('audio/webm')&&webm.length>=1){
                         source = document.getElementById("webmSource");
                         if(webm[1]){
-                            source.setAttribute("src",webm[1].url);
+                            this.setState({webmurl:webm[1].url});
+                            //source.setAttribute("src",webm[1].url);
                         }else{
-                            source.setAttribute("src",webm[0].url);
+                            this.setState({webmurl:webm[0].url});
+                            //source.setAttribute("src",webm[0].url);
                         }
                     }else{
                         if(mp4){
@@ -111,9 +115,9 @@ export default class PlayerComponent extends React.Component {
                     title:res.title,
                     thumbnail: res.thumbnail
                 })
-                document.getElementById("LoadingPlayIcon-"+url)?.setAttribute("hidden","");
-                document.getElementById("StartplayButton-"+url)?.removeAttribute("hidden");
-                this.play();
+                if(autoplay == true){
+                    this.play();
+                }
                 console.log(res);
                 return res;
         }else{
@@ -125,12 +129,11 @@ export default class PlayerComponent extends React.Component {
         document.getElementById("pause")?.removeAttribute("hidden")
         var elm = document.querySelector("#audioSource");
         elm.play();
-        
         this.setState({
             isPlaying: true
         }) 
         console.log(this.state.isPlaying)
-        elm.volume = this.state.volume/100
+        elm.volume = this.state.volume/100;
         }
         /** will be change for playlist feature
     async directPlay(e){
@@ -161,8 +164,46 @@ pause(event){
     var elm = document.querySelector("#audioSource");
     elm.pause();
     this.setState({isPlaying:false});
-    console.log(this.state.isPlaying)
+}
 
+startPlay(){
+    
+    //&& playlist != null && playlist[0]
+    console.log("is stopped: "+this.state.isStopped);
+    if(this.state.isStopped == true){
+        var playlist = getPlaylist();
+        console.log(playlist);
+        this.fetchSongData(playlist[0]?.url,true);
+        this.setState({isStopped : false});
+    }
+}
+
+onEnd(){
+    this.pause();
+    this.setState({isStopped:true,title:"",author:"",thumbnail:"",url:"",elapsedTime:0,webmurl:""});
+    //this.setState({isStopped:true})
+    console.log(this.state.isStopped)
+    var playlist = deleteSong(0);
+    if(playlist == null ||playlist.length==0){
+        return
+    }
+    this.fetchSongData(playlist[0]?.url,true);
+    this.setState({isStopped : false});
+}
+
+nextSong(){
+    var playlist = getPlaylist();
+    this.pause();
+    this.setState({isStopped:true});
+    if(playlist != null || playlist.length!=1){
+        this.setState({isStopped:true,title:"loading...",author:"",thumbnail:"",url:"",elapsedTime:0,webmurl:""});
+        var playlist = deleteSong(0);
+        this.fetchSongData(playlist[0]?.url,true);
+        this.setState({isStopped : false});
+    }
+    if(playlist.length == 1){
+        //pop up message no songs left and stop player;
+    }
 }
 
 updateSongLength(event){
@@ -174,7 +215,6 @@ updateElapseTime(event){
 }
 
 changePlaybackTime(event, Value){
-    console.log(Value)
     var time = (this.state.songLength)*Value/100;
     var elm = document.querySelector("#audioSource");
     elm.pause();
@@ -199,16 +239,9 @@ changeVolume(event, newValue){
     }
     if(newValue == NaN||newValue == undefined){
         newValue = 30;
-        console.log(newValue);
-        console.log("not a number")
     }
-    console.log("volume "+newValue)
-    var vol =newValue/100
-    
-    elm.volume = vol;
-    // console.log(this.state)
+    elm.volume = newValue/100;
     this.setState({volume : newValue});
-    //console.log(newValue+" and "+player.volume)
 };
 
  preventHorizontalKeyboardNavigation(event){
@@ -218,29 +251,45 @@ changeVolume(event, newValue){
   }
   toggleMuteOrUnmute(event){
     console.log(this.state.onMobile);
-    if(this.state?.onMobile){
-        this.handleClick(event);
-    }else{
-        if(this.state.volume==0){
-            this.changeVolume(null,50);
+        if(this.state?.onMobile){
+            this.handleClick(event);
         }else{
-            this.changeVolume(null,0);
+            if(this.state.volume==0){
+                this.changeVolume(null,50);
+            }else{
+                this.changeVolume(null,0);
+            }
         }
     }
-}
     componentDidMount() {
-        window.addEventListener('addSong', ()=>this.fetchSongData(localStorage.getItem("url")));
+        window.addEventListener('addSong', this.startPlay);
         console.log("mount")
+        var song = getPlaylist();
+        if(song!=null && song[0]?.url){
+            this.setState({
+                url:song[0].url,
+                songLength:song[0].duration,
+                thumbnail:song[0].thumbnail,
+                author : song[0].author,
+                title: song[0].title
+            })
+            this.fetchSongData(song[0].url,false);
+        }
         if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 540 ){
             this.setState({onMobile:true});
+            document.querySelector("#volumeslider")?.setAttribute("hidden","");
+            document.querySelector("."+styles.musicMetaDataContainer)?.setAttribute("hidden","");
+            document.querySelector("#songMetaDataContainerAlt")?.removeAttribute("hidden");
+            document.querySelector("#sideButtonsAlt")?.removeAttribute("hidden");
             console.log("mobile")
         }else{
-            console.log("desktop")
+            console.log("desktop");
+            document.querySelector("#sideButtonsAlt")?.setAttribute("hidden","");
+            document.querySelector("#songMetaDataContainerAlt")?.setAttribute("hidden","")
+            document.querySelector("."+styles.musicMetaDataContainer)?.removeAttribute("hidden")
+            document.querySelector("#volumeslider")?.removeAttribute("hidden");
             this.setState({onMobile:false});
         }
-    }
-    componentWillUnmount(){
-        window.removeEventListener('storage', this.checkStorage)
     }
     render() {
         return (<div id="musicplayer">
@@ -266,9 +315,9 @@ changeVolume(event, newValue){
                     <Slider style={{padding: "8px"}} id="playbackslider" size='small' aria-label="playback" value={(this.state.elapsedTime/this.state.songLength)*100} onChange={(event,newValue)=>this.changePlaybackTime(event,newValue)}/>
                     <output id="length">{parseTimeFromSeconds(this.state.songLength.toString())}</output>
             </Stack>
-            <audio id="audioSource" hidden preload='metadata' onTimeUpdate={this.updateElapseTime} onLoadedMetadata={   this.updateSongLength} onEnded={(event)=>this.pause(event)}>
+            <audio id="audioSource" hidden preload='metadata' onTimeUpdate={this.updateElapseTime} onLoadedMetadata={this.updateSongLength} onEnded={this.onEnd}>
+                <source id='webmSource' src={this.state.webmurl} type='audio/webm' />
                 <source id="mp4Source" src={this.state.mp4url} type='audio/mp4' />
-                <source id='webmSource' src='' type='audio/webm' />
             </audio>
         </div>
         <Grid container spacing={0} alignContent={"center"} flexWrap={"nowrap"} alignItems={"center"} justifyContent={"center"}>
@@ -286,9 +335,11 @@ changeVolume(event, newValue){
             </div>
             <Grid item xs={4}>
                 <Stack spacing={0} direction="row" alignItems="center" justifyContent={"center"}>
-                    <IconButton sx={{padding:"4px"}}>
-                        <PreviousIcon fontSize="large" />
-                    </IconButton>
+                        <span>
+                        <IconButton sx={{padding:"4px"}}>
+                            <PreviousIcon fontSize="large" />
+                        </IconButton>
+                        </span>
                         <span id="play" onClick={(event)=>this.play(event)}>
                             <IconButton sx={{padding:"4px"}}>
                                 <PlayIcon fontSize='large'/>
@@ -299,9 +350,11 @@ changeVolume(event, newValue){
                                 <PauseIcon fontSize='large'/>
                             </IconButton>
                         </span>
-                    <IconButton sx={{padding:"4px"}}>
-                        <NextIcon fontSize="large" />
-                    </IconButton>
+                        <span onClick={this.nextSong}>
+                            <IconButton sx={{padding:"4px"}}>
+                                <NextIcon fontSize="large" />
+                            </IconButton>
+                        </span>
             </Stack>
             </Grid>
             <Grid item xs={4}>
