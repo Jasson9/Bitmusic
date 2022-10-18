@@ -13,7 +13,6 @@ export const config = {
     }
 }
 
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     //var id = new String(req.cookie('id'))?.toString();
     var body = JSON.parse(req.body);
