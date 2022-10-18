@@ -40,9 +40,9 @@ export default class PlaylistComponent extends React.Component {
           }}
         >
           <List sx={{ py: 'var(--List-divider-gap)' }}>
-            {this.state.songs.map((item, index) => (
+          <Typography fontWeight="h2">Playlist</Typography>
+            {this.state.songs?this.state.songs.map((item, index) => (
               <React.Fragment key={item.title}>
-                <Typography fontWeight="h2">Playlist</Typography>
                 <ListItem>
                   <ListItemButton sx={{ gap: 1 }}>
                     <AspectRatio
@@ -62,7 +62,7 @@ export default class PlaylistComponent extends React.Component {
                 </ListItem>
                 {index !== this.state.songs.length - 1 && <ListDivider />}
               </React.Fragment>
-            ))}
+            )):""}
           </List>
         </Sheet>
       )};
