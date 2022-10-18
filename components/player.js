@@ -79,7 +79,7 @@ export default class PlayerComponent extends React.Component {
                         source = document.getElementById("webmSource");
                     }else{
                         audioitag = mp4.itag;
-                        source = document.querySelector("mp4Source");
+                        source = document.getElementByUd("mp4Source");
                     }
                     var sourceurl = await fetchAudio(res.videoId,res.formats[res.formats.length-1].itag);
                     source.setAttribute("src",sourceurl);

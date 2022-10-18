@@ -18,6 +18,6 @@ export async function fetchAudio(id,itag){
         throw err;
     })
     var blob = await fetchaudio.blob();
-    audiourl = URL.createObjectURL(blob);
+    var audiourl = URL.createObjectURL(blob);
     return audiourl;
 }
