@@ -4,6 +4,7 @@ import { NextApiResponse, NextApiRequest } from "next";
 import Kuroshiro from "kuroshiro";
 // @ts-ignore
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
+import path from 'path'
 const kuroshiro = new Kuroshiro();
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     return new Promise((resolve, reject) => {
@@ -15,8 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 text: result
             })
             if (Kuroshiro.Util.hasJapanese(result)) {
-                try {
-                    kuroshiro.init(new KuromojiAnalyzer())
+                try {console.log(path.join(new String(process.env.ROOT).toString(),"lib/dict"));
+                    kuroshiro.init(new KuromojiAnalyzer({dictPath:path.join(new String(process.env.ROOT).toString(),"lib/dict")}))
                         .then(function () {
                             return kuroshiro.convert(result, { to: "romaji", mode: "spaced" });
                         })

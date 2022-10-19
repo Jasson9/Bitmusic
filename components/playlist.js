@@ -38,7 +38,7 @@ export default class PlaylistComponent extends React.Component {
     async refreshLyrics() {
         var pl = getPlaylist();
         this.setState({
-            title: pl[0] ? pl[0].title + "\r\n" : "",
+            title: pl?.length > 0 ? pl[0].title + "\r\n" : "",
             lyrics: new Array(),
             option: <div></div>
         })

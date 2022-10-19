@@ -13,6 +13,12 @@ const nextConfig = {
   swcMinify: true,
   experimental:{
     
+  },
+  images: {
+    domains: ['i.ytimg.com'],
+  },
+  env: {
+    ROOT: __dirname,
   }
 }
 

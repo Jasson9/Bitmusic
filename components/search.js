@@ -54,7 +54,7 @@ const UseSearchSong = (props) => {
         console.log("play called " + index);
         document?.getElementById("StartplayButton-" + results[index].url)?.setAttribute("hidden", "");
         document?.getElementById("LoadingPlayIcon-" + results[index].url)?.removeAttribute("hidden");
-        addSong(results[index].url, results[index].title, results[index].author, results[index].thumbnail, results[index].duration)
+        addSong(results[index].url, results[index].title, results[index].author, results[index].thumbnail.replace("http","https"), results[index].duration)
         event.preventDefault();
         event.stopPropagation();
         document.getElementById("LoadingPlayIcon-" + results[index].url)?.setAttribute("hidden", "");
