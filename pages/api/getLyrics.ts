@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             })
             if (Kuroshiro.Util.hasJapanese(result)) {
                 try {console.log(path.join(new String(process.env.ROOT).toString(),"dict"));
-                    kuroshiro.init(new KuromojiAnalyzer(process.env.PRODUCTION?{dictPath:path.join(new String(process.env.ROOT).toString(),"dict")}:""))
+                    kuroshiro.init(new KuromojiAnalyzer(process.env.PRODUCTION?{dictPath:path.join(".vercel","output","dict")}:""))
                         .then(function () {
                             return kuroshiro.convert(result, { to: "romaji", mode: "spaced" });
                         })
