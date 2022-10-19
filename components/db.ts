@@ -1,11 +1,10 @@
-import Dexie, { Table } from 'dexie';
-
 export interface Song{
     url :string;
     thumbnail:string;
     author:string;
     title:string;
     duration:number;
+    id:number;
 }
 
 export function getPlaylist():Array<Song>|null{
@@ -50,7 +49,7 @@ export function addSong(url:string,title:string,author:string,thumbnail:string,d
     createPlaylist();
   }
   playlist = getPlaylist();
-  playlist?.push({url:url,title:title,author:author,thumbnail:thumbnail,duration:parseInt(duration)});
+  playlist?.push({url:url,title:title,author:author,thumbnail:thumbnail,duration:parseInt(duration),id:playlist.length+1});
   setPlaylist(playlist);
   window.dispatchEvent( new Event('addSong') )
   return playlist;

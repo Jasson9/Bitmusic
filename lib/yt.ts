@@ -1,3 +1,4 @@
+import { StringifyOptions } from 'querystring'
 import ytdl from 'ytdl-core'
 class YtVideoResponse{
     videoId:string
@@ -7,7 +8,8 @@ class YtVideoResponse{
     author:string
     formats:Array<any>
     needProxy:boolean
-    constructor(videoId:string,title:string,length:string,thumbnail:string,author:string,formats:Array<any>,needProxy:boolean){
+    source :string
+    constructor(videoId:string,title:string,length:string,thumbnail:string,author:string,formats:Array<any>,source:string,needProxy:boolean){
         this.videoId = videoId
         this.title = title
         this.length = length
@@ -15,6 +17,7 @@ class YtVideoResponse{
         this.author = author
         this.formats = formats
         this.needProxy = needProxy
+        this.source = source
     }
 }
 
@@ -28,11 +31,11 @@ export async function fetchAudioInfoYtdl(url:string):Promise<YtVideoResponse>{
             break;
         }
     }
-
-    return  new YtVideoResponse( info.videoDetails.videoId,info.videoDetails.title,info.videoDetails.lengthSeconds,info.videoDetails.thumbnails[info.videoDetails.lengthSeconds,info.videoDetails.thumbnails.length-1].url,info.videoDetails.author.name,audioFormats,needProxy);
+    return  new YtVideoResponse( info.videoDetails.videoId,info.videoDetails.title,info.videoDetails.lengthSeconds,info.videoDetails.thumbnails[info.videoDetails.lengthSeconds,info.videoDetails.thumbnails.length-1].url,info.videoDetails.author.name,audioFormats,"test",needProxy);
 }
 
-
+//signedchipher issue
+/**
 export async function fetchAudioInfo(url:string):Promise<YtVideoResponse>{
     var InitialDataRegex = new RegExp(/ytInitialPlayerResponse = ({.+});</);
     var res = await fetch(url,{
@@ -94,7 +97,7 @@ export async function fetchAudioInfo(url:string):Promise<YtVideoResponse>{
         needProxy
     )
     
-}
+} */
 
 
 export { YtVideoResponse};

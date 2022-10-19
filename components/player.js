@@ -13,13 +13,12 @@ import Popper from '@mui/material/Popper';
 import Fade from '@mui/material/Fade';
 import QueueMusicIcon from '@mui/icons-material/QueueMusicRounded';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import React,{ useEffect , useState} from 'react';
+import React from 'react';
 import styles from '../styles/player.module.scss'
 import { parseTimeFromSeconds } from '../lib/timeparser';
-import {Player} from './util'
 import {addSong,getPlaylist,deleteSong} from './db'
 import {getAudioInfo,fetchAudio} from './util'
-
+import $ from 'jquery';
 export default class PlayerComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -38,7 +37,8 @@ export default class PlayerComponent extends React.Component {
             id : this.canBeOpen ? 'transition-popper' : undefined,
             onMobile :null,
             isStopped: true,
-            webmurl:""
+            webmurl:"",
+            mp4url:""
         };
         this.updateSongLength = this.updateSongLength.bind(this);
         this.updateElapseTime = this.updateElapseTime.bind(this);
@@ -58,7 +58,10 @@ export default class PlayerComponent extends React.Component {
     }
     async fetchSongData(url,autoplay){
         if(url){
-                var res = await getAudioInfo(url);
+                this.setState({isStopped:true,title:"loading...",author:"loading...",thumbnail:"",elapsedTime:0});
+                var res = await getAudioInfo(url).catch(err=>{
+                    console.error(err);
+                });
                 var audioitag;
                 var webm= [];
                 var mp4;
@@ -99,8 +102,7 @@ export default class PlayerComponent extends React.Component {
                         }
                     }else{
                         if(mp4){
-                            source = document.querySelector("mp4Source");
-                            source.setAttribute("src",mp4.url);
+                            this.setState({mp4url:mp4.url});
                         }else{
                             console.error("No audio found on this video");
                             return null
@@ -124,7 +126,11 @@ export default class PlayerComponent extends React.Component {
             throw "no url"
         }
     }
-    play(){
+    play(event){
+        if(event){
+            event.preventDefault();
+            event.stopPropagation();
+        }
         document.getElementById("play")?.setAttribute("hidden","")
         document.getElementById("pause")?.removeAttribute("hidden")
         var elm = document.querySelector("#audioSource");
@@ -135,20 +141,6 @@ export default class PlayerComponent extends React.Component {
         console.log(this.state.isPlaying)
         elm.volume = this.state.volume/100;
         }
-        /** will be change for playlist feature
-    async directPlay(e){
-        console.log(e)
-        
-        var url = localStorage.getItem("url");
-        await this.fetchSongData(e)
-        var audioelm = document.querySelector("#audioSource");
-        //var source = document.querySelector("#mp4Source");
-        //source.setAttribute("src",url);
-        console.log(url)
-        this.setState({mp4url:url});
-        audioelm.load();
-        this.play();
-    } */
     handleClick(event){
         this.setState({anchorEl:event.currentTarget});
         this.setState({"open":!this.state.open}); 
@@ -159,24 +151,17 @@ export default class PlayerComponent extends React.Component {
 
 
 pause(event){
+    if(event){
+        event.preventDefault();
+        event.stopPropagation();
+    }  
     document.getElementById("pause")?.setAttribute("hidden","")
     document.getElementById("play")?.removeAttribute("hidden")
     var elm = document.querySelector("#audioSource");
     elm.pause();
-    this.setState({isPlaying:false});
+    this.setState({isPlaying:false});  
 }
 
-startPlay(){
-    
-    //&& playlist != null && playlist[0]
-    console.log("is stopped: "+this.state.isStopped);
-    if(this.state.isStopped == true){
-        var playlist = getPlaylist();
-        console.log(playlist);
-        this.fetchSongData(playlist[0]?.url,true);
-        this.setState({isStopped : false});
-    }
-}
 
 onEnd(){
     this.pause();
@@ -189,21 +174,45 @@ onEnd(){
     }
     this.fetchSongData(playlist[0]?.url,true);
     this.setState({isStopped : false});
+    window.dispatchEvent(new Event("songChange"));
 }
 
-nextSong(){
+startPlay(event){
+    if(event){
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    //&& playlist != null && playlist[0]
+    console.log("is stopped: "+this.state.isStopped);
+    var playlist = getPlaylist();
+    if(this.state.isStopped == true && this.state.isPlaying == false && this.state.url == ""){
+        console.log(playlist);
+        this.fetchSongData(playlist[0]?.url,true);
+        this.setState({isStopped : false});
+        window.dispatchEvent(new Event("songChange"));
+    }
+}
+
+nextSong(event){
+    if(event){
+        event.preventDefault();
+        event.stopPropagation();
+    }
     var playlist = getPlaylist();
     this.pause();
     this.setState({isStopped:true});
-    if(playlist != null || playlist.length!=1){
+    var playlist = deleteSong(0);
+    if(playlist != null && playlist.length>=1){
         this.setState({isStopped:true,title:"loading...",author:"",thumbnail:"",url:"",elapsedTime:0,webmurl:""});
-        var playlist = deleteSong(0);
         this.fetchSongData(playlist[0]?.url,true);
         this.setState({isStopped : false});
-    }
-    if(playlist.length == 1){
-        //pop up message no songs left and stop player;
-    }
+        window.dispatchEvent(new Event("songChange"));
+    }else{
+        if(playlist?.length == 0){
+            this.setState({isStopped:true,title:"no music",author:"add music to playlist to start",thumbnail:"",url:"",elapsedTime:0,webmurl:""});
+            //pop up message no songs left and stop player;
+        }
+    }   
 }
 
 updateSongLength(event){
@@ -262,7 +271,7 @@ changeVolume(event, newValue){
         }
     }
     componentDidMount() {
-        window.addEventListener('addSong', this.startPlay);
+        window.addEventListener('addSong', (event)=>this.startPlay(event));
         console.log("mount")
         var song = getPlaylist();
         if(song!=null && song[0]?.url){
@@ -272,7 +281,8 @@ changeVolume(event, newValue){
                 thumbnail:song[0].thumbnail,
                 author : song[0].author,
                 title: song[0].title
-            })
+            });
+            window.dispatchEvent(new Event("songChange"));
             this.fetchSongData(song[0].url,false);
         }
         if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 540 ){
@@ -291,6 +301,18 @@ changeVolume(event, newValue){
             this.setState({onMobile:false});
         }
     }
+
+    togglePlaylist(){
+        var target = $("."+styles.playlistcontainermobile)
+        if(target.hasClass(styles.playlistOn)){
+            target.removeClass(styles.playlistOn);
+            target.addClass(styles.playlistOff);
+        }else{
+            target.addClass(styles.playlistOn);
+            target.removeClass(styles.playlistOff);
+        }
+    }
+
     render() {
         return (<div id="musicplayer">
         <div className={styles.songMetaDataContainerAlt} id="songMetaDataContainerAlt" hidden>
@@ -301,7 +323,7 @@ changeVolume(event, newValue){
             <div id={styles.authorAlt}>{this.state.author}</div>
         </div>
         </div>
-        <div id="playlistbtnAlt">
+        <div id="playlistbtnAlt" onClick={()=>this.togglePlaylist()}>
             <IconButton>
                 <QueueMusicIcon/>
             </IconButton>
@@ -350,7 +372,7 @@ changeVolume(event, newValue){
                                 <PauseIcon fontSize='large'/>
                             </IconButton>
                         </span>
-                        <span onClick={this.nextSong}>
+                        <span onClick={(event)=>this.nextSong(event)}>
                             <IconButton sx={{padding:"4px"}}>
                                 <NextIcon fontSize="large" />
                             </IconButton>

@@ -1,7 +1,7 @@
 
 import { NextApiResponse } from "next";
 import { NextApiRequest } from "next";
-import { fetchAudioInfo,YtVideoResponse ,fetchAudioInfoYtdl} from "../../lib/yt";
+import { YtVideoResponse ,fetchAudioInfoYtdl} from "../../lib/yt";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     //var id = new String(req.cookie('id'))?.toString();

@@ -1,8 +1,8 @@
 
 var stringRegex = new RegExp(/(.*.)-(..)-(..)T(..):(..):(..)/);
 
-function parseYTTimeFromString(TimeString:string){
-    var timeArr = TimeString.split(":");
+function parseYTTimeFromString(TimeString:string, regexstring:string=":"){
+    var timeArr = TimeString.split(regexstring);
     var seconds = 0;
     if(timeArr.length == 3){
         seconds += Number(timeArr[0].valueOf())*3600;
