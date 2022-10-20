@@ -302,15 +302,10 @@ changeVolume(event, newValue){
         }
     }
 
-    togglePlaylist(){
-        var target = $("."+styles.playlistcontainermobile)
-        if(target.hasClass(styles.playlistOn)){
-            target.removeClass(styles.playlistOn);
-            target.addClass(styles.playlistOff);
-        }else{
-            target.addClass(styles.playlistOn);
-            target.removeClass(styles.playlistOff);
-        }
+    togglePlaylist(event){
+        event.preventDefault();
+        event.stopPropagation();
+        window.dispatchEvent(new Event("togglePlaylist"));
     }
 
     render() {
@@ -323,7 +318,7 @@ changeVolume(event, newValue){
             <div id={styles.authorAlt}>{this.state.author}</div>
         </div>
         </div>
-        <div id="playlistbtnAlt" onClick={()=>this.togglePlaylist()}>
+        <div id="playlistbtnAlt" onClick={(event)=>this.togglePlaylist(event)}>
             <IconButton>
                 <QueueMusicIcon/>
             </IconButton>

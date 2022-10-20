@@ -11,6 +11,7 @@ import styles from '../styles/player.module.scss';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/ClearRounded';
 import $ from 'jquery';
+import Slide from '@mui/material/Slide';
 var reg = new RegExp(/[?]v=(.+)/);
 export default class PlaylistComponent extends React.Component {
     constructor(props) {
@@ -21,7 +22,8 @@ export default class PlaylistComponent extends React.Component {
             lyrics: [],
             displayLyrics: "nothing here",
             option: <div></div>,
-            title: ""
+            title: "",
+            showPlaylist: false
         }
         this.componentDidMount = this.componentDidMount.bind(this);
         this.refreshSongs = this.refreshSongs.bind(this);
@@ -29,6 +31,7 @@ export default class PlaylistComponent extends React.Component {
         this.switchToPlaylist = this.switchToPlaylist.bind(this);
         this.refreshLyrics = this.refreshLyrics.bind(this);
         this.toggleDisplayLyrics = this.toggleDisplayLyrics.bind(this);
+        this.handlePlaylistToggle = this.handlePlaylistToggle.bind(this);
     }
     refreshSongs() {
         this.setState({
@@ -57,7 +60,7 @@ export default class PlaylistComponent extends React.Component {
                 console.log(lyrics.data)
                 this.setState({
                     lyrics: lyrics.data,
-                    displayLyrics: lyrics.data[0].text,
+                    displayLyrics: lyrics.data.length>1?lyrics.data[0].text:"no lyrics found",
                     option: lyrics.data ?
                         lyrics.data.map((res, key) =>
                             <div className={styles.lyricsLanguangeOption} key={key} onClick={() => this.toggleDisplayLyrics(key)}>{res.lang}</div>
@@ -65,7 +68,7 @@ export default class PlaylistComponent extends React.Component {
                 })
             } catch (err) {
                 this.setState({
-                    displayLyrics: "cannot found the lyrics"
+                    displayLyrics: "error when getting lyrics"
                 })
                 console.error(err);
             }
@@ -76,11 +79,18 @@ export default class PlaylistComponent extends React.Component {
         }
     }
 
+    handlePlaylistToggle(){
+        this.setState({
+            showPlaylist: !this.state.showPlaylist
+        }) ;
+      };
+
     componentDidMount() {
         //peformace wise???
         window.addEventListener("addSong", this.refreshSongs);
         window.addEventListener("deleteSong", this.refreshSongs);
         window.addEventListener("songChange", this.refreshLyrics);
+        window.addEventListener("togglePlaylist", this.handlePlaylistToggle);
         this.refreshLyrics();
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 540) {
             $("#sidecontainer").removeClass(styles.playlistcontainer);
@@ -108,8 +118,9 @@ export default class PlaylistComponent extends React.Component {
 
     render() {
         return (
-            <div id="sidecontainer" className={[styles.playlistcontainer].join(" ")}>
-                <a className={styles.resizeBar} id="resizer" title={""} href={"javascript:void(0)"}></a>
+            <Slide direction="up" in={this.state.onMobile?this.state.showPlaylist:true} mountOnEnter>
+            <div id="sidecontainer" className={[this.state.onMobile?styles.playlistcontainermobile:styles.playlistcontainer].join(" ")}>
+                <a className={styles.resizeBar} id="resizer" title={""} ></a>
                 <div className={styles.playlistContents}>
                     <div className={styles.playlistHeadNav}>
                         <div className={styles.playlistNavButton} onClick={() => this.switchToPlaylist()}>
@@ -162,11 +173,11 @@ export default class PlaylistComponent extends React.Component {
                         <div className={styles.lyricsLanguangeChooser}>
                             {this.state.option}
                         </div>
-                        <span style={{ "whiteSpace": "pre-line" }}>{this.state.title}{this.state.displayLyrics}</span>
+                        <span className={styles.lyrics} style={{ "whiteSpace": "pre-line" }}>{this.state.title}{this.state.displayLyrics}</span>
                     </div>
                 </div>
             </div>
-
+            </Slide>
 
         )
     };
