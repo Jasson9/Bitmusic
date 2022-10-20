@@ -60,7 +60,7 @@ export default class PlaylistComponent extends React.Component {
                 console.log(lyrics.data)
                 this.setState({
                     lyrics: lyrics.data,
-                    displayLyrics: lyrics.data.length>1?lyrics.data[0].text:"no lyrics found",
+                    displayLyrics: lyrics.data.length>0?lyrics.data[0].text:"no lyrics found",
                     option: lyrics.data ?
                         lyrics.data.map((res, key) =>
                             <div className={styles.lyricsLanguangeOption} key={key} onClick={() => this.toggleDisplayLyrics(key)}>{res.lang}</div>
