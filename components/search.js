@@ -52,11 +52,11 @@ const UseSearchSong = (props) => {
     }
     async function addToPlaylist(index, event) {
         console.log("play called " + index);
-        document?.getElementById("StartplayButton-" + results[index].url)?.setAttribute("hidden", "");
-        document?.getElementById("LoadingPlayIcon-" + results[index].url)?.removeAttribute("hidden");
-        addSong(results[index].url, results[index].title, results[index].author, results[index].thumbnail.replace("http","https"), results[index].duration)
         event.preventDefault();
         event.stopPropagation();
+        document?.getElementById("StartplayButton-" + results[index].url)?.setAttribute("hidden", "");
+        document?.getElementById("LoadingPlayIcon-" + results[index].url)?.removeAttribute("hidden");
+        addSong(results[index].url, results[index].title, results[index].author, results[index].thumbnail, results[index].duration)
         document.getElementById("LoadingPlayIcon-" + results[index].url)?.setAttribute("hidden", "");
         document.getElementById("StartplayButton-" + results[index].url)?.removeAttribute("hidden");
         return

@@ -110,6 +110,5 @@ export async function getLyricsFromYTMusicId(VideoId:string){
         "method": "POST"
       });
       var lyric:any = (await res2.json()).contents.sectionListRenderer.contents[0].musicDescriptionShelfRenderer.description.runs[0].text;
-      console.log(lyric)
       return lyric;
 }
