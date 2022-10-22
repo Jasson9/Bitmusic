@@ -32,6 +32,7 @@ export default class PlaylistComponent extends React.Component {
         this.refreshLyrics = this.refreshLyrics.bind(this);
         this.toggleDisplayLyrics = this.toggleDisplayLyrics.bind(this);
         this.handlePlaylistToggle = this.handlePlaylistToggle.bind(this);
+        this.onResizerDrag = this.onResizerDrag.bind(this);
     }
     refreshSongs() {
         this.setState({
@@ -84,6 +85,24 @@ export default class PlaylistComponent extends React.Component {
             showPlaylist: !this.state.showPlaylist
         }) ;
       };
+    onResizerDrag(elm){
+        console.log("move");
+        if (document.getElementById("resizer")) {
+            document.getElementById("resizer").onmousedown = console.log("move");
+          } else {
+            elm.onmousedown = dragMouseDown;
+          }
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // get the mouse cursor position at startup:
+            //pos3 = e.clientX;
+            // pos4 = e.clientY;
+            // document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            // document.onmousemove = elementDrag;
+          }
+    }
 
     componentDidMount() {
         //peformace wise???
@@ -101,6 +120,19 @@ export default class PlaylistComponent extends React.Component {
             $("#sidecontainer").addClass(styles.playlistcontainer);
             this.setState({ onMobile: false });
         }
+        var elm = document.getElementById("resizer");
+        /**
+        document.addEventListener("mousedown",(event)=>{
+            //elm.onmousedown = this.onResizerDrag();
+            event.preventDefault();
+            if(event?.target?.id == "resizer" && event.clientX != 0 ){
+                console.log(event)
+                var page = document.getElementById("resultcontainer");
+                var playlist = document.getElementById("sidecontainer");
+                page?.setAttribute("style",`width: ${Math.max(event.clientX,window.innerWidth-400)}px`);
+                playlist?.setAttribute("style",`width: ${window.innerWidth-event.clientX}px`)
+            }
+        }); */
     }
     switchToLyrics() {
         document.getElementById("playlistcontainer").setAttribute("hidden", "");

@@ -1,14 +1,12 @@
 import { NextApiResponse } from "next";
 import { NextApiRequest } from "next";
 import { SearchKeyword , searchMusicKeyword} from "../../lib/SearchYoutubeAPI";
-import { searchSong } from "../../lib/soundcloud";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     //var id = new String(req.cookie('id'))?.toString();
     var body = JSON.parse(req.body);
     console.log(body.query)
     var ytmusic:any = await searchMusicKeyword(body.query);
     var yt:any = await SearchKeyword(body.query);
-    searchSong(body.query);
     if(ytmusic!=null||yt!=null){
         var results = []
         for(var i = 0; i < 20; i++){

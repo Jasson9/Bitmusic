@@ -27,6 +27,7 @@ const [searchResult,setsearchResult] = React.useState<any>(<SearchResultComponen
 const [player,setPlayer] = React.useState<any>(<PlayerComponent url={props.url}/>);
 
 React.useEffect(()=>{
+    /**
     document.addEventListener("drag",(res:any)=>{
         if(res?.target?.id == "resizer" && res.clientX != 0 ){
             var page = document.getElementById("resultcontainer");
@@ -34,7 +35,7 @@ React.useEffect(()=>{
             page?.setAttribute("style",`width: ${Math.max(res.clientX,window.innerWidth-400)}px`)
             playlist?.setAttribute("style",`width: ${window.innerWidth-res.clientX}px`)
         }
-    });
+    }); */
 })
 
 function Search(){
