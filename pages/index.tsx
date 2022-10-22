@@ -48,7 +48,7 @@ if (!hasMounted) {
     return null;
   }
   return (
-    <div>
+    <html>
         <Head>
             <title>Music Player</title>
             <meta charSet="UTF-8"></meta>
@@ -67,7 +67,7 @@ if (!hasMounted) {
                         <div className={styles.searchbarcontainer}>
                             <Box>
                             <Stack direction="row" alignItems="center" justifyContent="center">
-                                <Input id="searchinput" sx={{width:"40vmin",color:"aliceblue",paddingLeft:"5px",fontSize:"2.5vmin"}} style={{color:"aliceblue"}}/>
+                                <Input id="searchinput" sx={{width:"40vmin",color:"aliceblue",paddingLeft:"5px",fontSize:"2.5vmin"}} style={{color:"aliceblue"}} onKeyDown={(event)=>event.keyCode===13&&!event.repeat?Search():""}/>
                                 <div  onClick={Search}>
                                 <IconButton >
                                     <SearchIcon id="searchIcon"/>
@@ -88,7 +88,7 @@ if (!hasMounted) {
             </div>
         </body>
 
-    </div>
+    </html>
     
   )
   
