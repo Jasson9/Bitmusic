@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } 
     data.push({lang:"original",text:original})
     var translate = await translateAutoEn(original);
-    if(translate!="undefined")data.push({lang:'English',text: translate+"\r\n\r\ntranslated with google translate"});
+    if(translate!="undefined"&&translate!=original)data.push({lang:'English',text: translate+"\r\n\r\ntranslated with google translate"});
     if(Kuroshiro.Util.hasJapanese(original)){
         var romaji = await romanize(original);
         if(romaji)data.push({lang:'romaji',text:romaji});
