@@ -273,7 +273,6 @@ export default class PlayerComponent extends React.Component {
         window.addEventListener('addSong', (event) => this.startPlay(event));
         window.addEventListener("keydown",(event)=>{
             console.log(event);
-            event.preventDefault();
             event.stopPropagation();
             if(event.target.id != "searchinput" && !event.repeat){
                 switch(event.keyCode){
