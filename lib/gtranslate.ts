@@ -1,6 +1,12 @@
 
 export async function translateAutoEn(input:string){
-    var t = input.replaceAll("\r\n",'\\\\'+"n");
+    var t = JSON.stringify(input);
+    //console.log(t);
+     t = t.replaceAll("\\n","\\\\n");
+     t = t.replaceAll("\\r","");
+     t = t.replaceAll('"',"");
+    console.log(t);
+
     var body = await  fetch("https://translate.google.co.id/_/TranslateWebserverUi/data/batchexecute?rpcids=MkEWBc&source-path=%2F&bl=boq_translate-webserver_20221018.05_p0&hl=id&soc-app=1&soc-platform=1&soc-device=1&rt=c", {
     "headers": {
         "accept": "*/*",
@@ -30,6 +36,8 @@ export async function translateAutoEn(input:string){
     "method": "POST"
     });
     var res = await body.text();
-    var text = /null,\[\[\\"((.|\n)*)\\\"\]\]\]\]/.exec(res)?.[1].split("\\\\"+'n')
-    return text?.join("\r\n")+"\r\n\r\ntranslated with google translate";
+    var text:any = /null,\[\[\\"((.|\n)*)\\\"\]\]\]\]/.exec(res)?.[1].split("\\\\"+'n')
+    var formattedtext = text?.join("\r\n");
+    formattedtext = formattedtext.replaceAll('\\\\\\"','"');
+    return formattedtext;
 }
