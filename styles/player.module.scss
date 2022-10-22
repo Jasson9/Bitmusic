@@ -66,6 +66,45 @@ $light-border: rgb(125, 125, 125);
     margin-left: auto;
 }
 
+.searchResultSourceToggle{
+    width: 100%;
+    flex-flow: row wrap column wrap;
+    display: inline-flex;
+    flex-direction: row;
+    background-color: #373062;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
+    border-radius: 25px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.searchResultSource{
+    margin: auto;
+    display: flex;
+    text-align: center;
+    height: 40px;
+    padding: 7.5px;
+    cursor: pointer;
+    font-size: 2.5vmin;
+    width: -moz-max-content;
+    width: max-content;
+    flex: 3 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.searchResultToggleSeparator{
+    width: 1px;
+    height: 30px;
+    background-color: #06060661;
+}
+
+.searchResultSource:click{
+    background-color: rgba(116, 52, 158, 0.297);
+}
+
 .songMetaDataContainerAlt{
     width: 100%;
     bottom: 95px;
@@ -150,7 +189,7 @@ $light-border: rgb(125, 125, 125);
     max-height: 6.82vmin;
     overflow: hidden;
     font-size: 2.6vmin;
-    
+    cursor:pointer;
 }
 
 .resultAuthor{
@@ -184,7 +223,6 @@ $light-border: rgb(125, 125, 125);
     align-items: center;
     min-width: 300px;
     max-width: 100%;
-    cursor:pointer;
 }
 
 .playlistcontainermobile{
@@ -197,7 +235,7 @@ $light-border: rgb(125, 125, 125);
     border-top-right-radius: 5px;
     background-color: rgba(35, 31, 61, 0.978);
     width: 100%;
-    z-index: 2;
+    z-index: 10;
     flex-direction: row;
     justify-content: center;
 }
@@ -270,6 +308,7 @@ $light-border: rgb(125, 125, 125);
     width: 20vh;
     height: auto;
     position: sticky;
+    cursor:pointer;
 }
 
 
@@ -395,6 +434,10 @@ $light-border: rgb(125, 125, 125);
     background-color: rgba(122, 122, 122, 0.118);
 }
 
+.toggleActive{
+    background-color: #291d4a;
+}
+
 .lyrics{
     white-space: pre-line;
     overflow: auto;
@@ -453,10 +496,14 @@ $light-border: rgb(125, 125, 125);
 
 .playlistHeadNav{
     display: flex;
+    overflow: hidden;
     flex-direction: row;
+    border-top-left-radius: 10px;
     flex-wrap: nowrap;
     justify-content: space-around;
     position: static;
+    align-content: center;
+    align-items: center;
 }
 
 .playlistSongsContainer{
@@ -522,7 +569,6 @@ $light-border: rgb(125, 125, 125);
 }
 
 .pagecontent{
-    padding:5px;
     height: 100%;
     display: flex;
     --bs-gutter-x: 1.5rem;

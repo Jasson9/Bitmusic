@@ -54,7 +54,8 @@ async function SearchKeyword(keyword:string):Promise<Array<any>> {
             thumbnail : result[i].videoRenderer.thumbnail.thumbnails[0].url,
             author:result[i].videoRenderer.ownerText.runs[0].text,
             url: "https://www.youtube.com/watch?v="+result[i].videoRenderer.videoId,
-            duration: parseYTTimeFromString(result[i].videoRenderer.lengthText.simpleText)
+            duration: parseYTTimeFromString(result[i].videoRenderer.lengthText.simpleText),
+            source:"youtube"
             })
     }else{
         console.log("Null on\n"+result[i].videoRenderer);
@@ -107,7 +108,8 @@ export async function searchMusicKeyword(query:string){
             title:song.musicResponsiveListItemRenderer.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].text,
             author:song.musicResponsiveListItemRenderer.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs[0].text,
             duration: parseYTTimeFromString(song.musicResponsiveListItemRenderer.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs[song.musicResponsiveListItemRenderer.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs.length-1].text,"."),
-            thumbnail: "https://i.ytimg.com/vi/"+song.musicResponsiveListItemRenderer.playlistItemData.videoId+"/maxresdefault.jpg"
+            thumbnail: "https://i.ytimg.com/vi/"+song.musicResponsiveListItemRenderer.playlistItemData.videoId+"/maxresdefault.jpg",
+            source:"youtube-music"
         })
     });
     //song.musicResponsiveListItemRenderer.thumbnail.musicThumbnailRenderer.thumbnail.thumbnails[song.musicResponsiveListItemRenderer.thumbnail.musicThumbnailRenderer.thumbnail.thumbnails.length-1].url

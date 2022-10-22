@@ -5,6 +5,7 @@ export interface Song{
     title:string;
     duration:number;
     id:number;
+    source:string
 }
 
 export function getPlaylist():Array<Song>|null{
@@ -42,14 +43,14 @@ export function setPlaylist(Playlist:Array<Song>|null){
   return Playlist;
 } 
 
-export function addSong(url:string,title:string,author:string,thumbnail:string,duration:string){
+export function addSong(url:string,title:string,author:string,thumbnail:string,duration:string,source:string){
   var playlist:Array<Song>|null;
   playlist = getPlaylist();
   if(playlist == null){
     createPlaylist();
   }
   playlist = getPlaylist();
-  playlist?.push({url:url,title:title,author:author,thumbnail:thumbnail,duration:parseInt(duration),id:playlist.length+1});
+  playlist?.push({url:url,title:title,author:author,thumbnail:thumbnail,duration:parseInt(duration),source:source,id:playlist.length+1});
   setPlaylist(playlist);
   window.dispatchEvent( new Event('addSong') )
   return playlist;

@@ -1,22 +1,19 @@
-
-/** 
-class SongMetaData{
-    title:string;
-    author:string;
-    thumb:string;
-    vidurl:string;
-    formats:Object[];
-    duration : string
-    constructor(fileurl:string,title:string,author:string,thumb:string,vidurl:string,duration:string,formats:Array<Object>){
-        this.fileurl = fileurl;
-        this.duration = duration;
-        this.formats = formats;
-        this.author = author;
-        this.thumb = thumb;
-        this.title = title;
-        this.vidurl = vidurl;
+class AudioSearchResponse{
+    videoId:string
+    title:string
+    length:string
+    thumbnail:string
+    author:string
+    source :string
+    constructor(videoId:string,title:string,length:string,thumbnail:string,author:string,source:string){
+        this.videoId = videoId
+        this.title = title
+        this.length = length
+        this.thumbnail = thumbnail
+        this.author = author
+        this.source = source
     }
-    
-}*/
+}
 
-export {}
+
+export {AudioSearchResponse}

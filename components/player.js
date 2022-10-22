@@ -29,8 +29,8 @@ export default class PlayerComponent extends React.Component {
             songLength: 0,
             url: "",
             volume: 30,
-            title: "",
-            author: "",
+            title: "no music",
+            author: "add music to playlist and start listening",
             open: false,
             anchorEl: null,
             canBeOpen: this.open && Boolean(anchorEl),
@@ -55,6 +55,7 @@ export default class PlayerComponent extends React.Component {
         this.startPlay = this.startPlay.bind(this);
         this.onEnd = this.onEnd.bind(this);
         this.nextSong = this.nextSong.bind(this);
+        this.clearSrc = this.clearSrc.bind(this);
     }
     async fetchSongData(url, autoplay) {
         if (url) {
@@ -161,15 +162,25 @@ export default class PlayerComponent extends React.Component {
         elm.pause();
         this.setState({ isPlaying: false });
     }
-
+    clearSrc(){
+        var webm = document.getElementById("webmSource");
+        var mp4 = document.getElementById("mp4Source");
+        var audio = document.getElementById("audioSource");
+        audio.pause();
+        webm.setAttribute("src","");
+        mp4.setAttribute("src","");
+        audio.load();
+    }
 
     onEnd() {
         this.pause();
-        this.setState({ isStopped: true, title: "", author: "", thumbnail: "", url: "", elapsedTime: 0, webmurl: "" });
+        this.setState({ isStopped: true, title: "", author: "", thumbnail: "", url: "", elapsedTime: 0, songLength:0,webmurl: "" , mp4url:""});
+        this.clearSrc();
         //this.setState({isStopped:true})
         console.log(this.state.isStopped)
         var playlist = deleteSong(0);
         if (playlist == null || playlist.length == 0) {
+            this.setState({ isStopped: true, title: "no music", author: "add music to playlist and start listening", thumbnail: "", url: "", elapsedTime: 0, songLength:0,webmurl: "" , mp4url:""});
             return
         }
         this.fetchSongData(playlist[0]?.url, true);
@@ -203,13 +214,14 @@ export default class PlayerComponent extends React.Component {
         this.setState({ isStopped: true });
         var playlist = deleteSong(0);
         if (playlist != null && playlist.length >= 1) {
-            this.setState({ isStopped: true, title: "loading...", author: "", thumbnail: "", url: "", elapsedTime: 0, webmurl: "" });
+            this.setState({ isStopped: true, title: "loading...", songLength:0, author: "", thumbnail: "", url: "", elapsedTime: 0, webmurl: "" , mp4url:""});
             this.fetchSongData(playlist[0]?.url, true);
             this.setState({ isStopped: false });
             window.dispatchEvent(new Event("songChange"));
         } else {
             if (playlist?.length == 0) {
-                this.setState({ isStopped: true, title: "no music", author: "add music to playlist to start", thumbnail: "", url: "", elapsedTime: 0, webmurl: "" });
+                this.clearSrc();
+                this.setState({ isStopped: true, title: "no music", author: "add music to playlist and start listening", songLength:0 ,thumbnail: "", url: "", elapsedTime: 0, webmurl: "" , mp4url:""});
                 //pop up message no songs left and stop player;
             }
         }

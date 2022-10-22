@@ -105,11 +105,17 @@ export default class PlaylistComponent extends React.Component {
     switchToLyrics() {
         document.getElementById("playlistcontainer").setAttribute("hidden", "");
         document.getElementById("lyricscontainer").removeAttribute("hidden");
+        document.getElementById("lyricsToggle").classList.add(styles.toggleActive);
+        document.getElementById("playlistToggle").classList.remove(styles.toggleActive);
     }
+
     switchToPlaylist() {
         document.getElementById("lyricscontainer").setAttribute("hidden", "");
         document.getElementById("playlistcontainer").removeAttribute("hidden");
+        document.getElementById("lyricsToggle").classList.remove(styles.toggleActive);
+        document.getElementById("playlistToggle").classList.add(styles.toggleActive);
     }
+
     toggleDisplayLyrics(index) {
         this.setState({
             displayLyrics: this.state.lyrics[index].text
@@ -120,13 +126,14 @@ export default class PlaylistComponent extends React.Component {
         return (
             <Slide direction="up" in={this.state.onMobile?this.state.showPlaylist:true} mountOnEnter>
             <div id="sidecontainer" className={[this.state.onMobile?styles.playlistcontainermobile:styles.playlistcontainer].join(" ")}>
-                <a className={styles.resizeBar} id="resizer" title={""} ></a>
+                <div className={styles.resizeBar} id="resizer" title={""} ></div>
                 <div className={styles.playlistContents}>
                     <div className={styles.playlistHeadNav}>
-                        <div className={styles.playlistNavButton} onClick={() => this.switchToPlaylist()}>
+                        <div className={[styles.playlistNavButton,styles.toggleActive].join(" ")} id="playlistToggle" onClick={() => this.switchToPlaylist()}>
                             <h2>Playlist</h2>
                         </div>
-                        <div className={styles.playlistNavButton} onClick={() => this.switchToLyrics()}>
+                        <div style={{width:"1px",height:"40px",backgroundColor:"#06060661"}}></div>
+                        <div className={styles.playlistNavButton} id="lyricsToggle" onClick={() => this.switchToLyrics()}>
                             <h2>Lyric</h2>
                         </div>
                     </div>
