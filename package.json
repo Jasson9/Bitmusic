@@ -15,14 +15,11 @@
     "@mui/material": "^5.10.9",
     "@types/jquery": "^3.5.14",
     "cheerio": "^1.0.0-rc.12",
-    "dexie": "^3.2.2",
-    "dexie-react-hooks": "^1.1.1",
     "jquery": "^3.6.1",
     "kuroshiro": "^1.2.0",
     "kuroshiro-analyzer-kuromoji": "^1.1.0",
     "node-fetch": "^3.2.10",
     "sass": "^1.55.0",
-    "wanakana": "^5.0.2",
     "ytdl-core": "^4.11.2"
   },
   "devDependencies": {
