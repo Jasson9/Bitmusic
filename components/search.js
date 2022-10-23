@@ -136,12 +136,12 @@ const UseSearchSong = (props) => {
                             <div className={styles.resulticons}>
                                 <div onClick={(event) => addToPlaylist(key, event)} style={{zIndex:"9"}}>
                                     <IconButton>
-                                        <PlayIcon />
+                                        <PlayIcon sx={{color:"white"}} />
                                     </IconButton>
                                 </div>
                                 <div onClick={(event) => downloadSong(res.url,event)} style={{zIndex:"9"}}  id={"DownloadIcon-" + res.url}>
                                     <IconButton>
-                                        <DownloadIcon />
+                                        <DownloadIcon sx={{color:"white"}} />
                                     </IconButton>
                                 </div>
                                 <div id={"DownloadProgressIcon-" + res.url} style={{zIndex:"5"}}  hidden>
@@ -149,12 +149,12 @@ const UseSearchSong = (props) => {
                                 </div>
                                 <a id={"DownloadDoneIcon-" + res.url} style={{zIndex:"5"}} hidden target={"_blank"} rel={"noreferrer"}>
                                     <IconButton>
-                                        <DownloadDoneIcon />
+                                        <DownloadDoneIcon sx={{color:"white"}} />
                                     </IconButton>
                                 </a>
                                 <a href={res.url} style={{zIndex:"5"}} target={"_blank"} rel={"noreferrer"}>
                                     <IconButton>
-                                        <YouTubeIcon />
+                                        <YouTubeIcon sx={{color:"white"}} />
                                     </IconButton>
                                 </a>
                             </div>

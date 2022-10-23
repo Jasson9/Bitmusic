@@ -70,7 +70,7 @@ if (!hasMounted) {
                                 <Input placeholder={"Enter song title"} id="searchinput" sx={{width:"40vmin",color:"aliceblue",paddingLeft:"5px",fontSize:"2.5vmin"}} style={{color:"aliceblue"}} onKeyDown={(event)=>event.keyCode===13&&!event.repeat?Search():""}/>
                                 <div  onClick={Search}>
                                 <IconButton  aria-label="Search">
-                                    <SearchIcon id="searchIcon"/>
+                                    <SearchIcon sx={{color:"white"}} id="searchIcon"/>
                                 </IconButton>
                                 </div>
                                 <div id="searchingIcon" aria-label="Search loading" hidden>

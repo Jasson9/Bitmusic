@@ -348,8 +348,8 @@ export default class PlayerComponent extends React.Component {
                     </div>
                 </div>
                 <div id="playlistbtnAlt" onClick={(event) => this.togglePlaylist(event)}>
-                    <IconButton  aria-label="Show Playlist">
-                        <QueueMusicIcon />
+                    <IconButton sx={{color:"white"}} aria-label="Show Playlist">
+                        <QueueMusicIcon sx={{color:"white"}}/>
                     </IconButton>
                 </div>
             </div>
@@ -376,29 +376,29 @@ export default class PlayerComponent extends React.Component {
                         </div>
                         <div className={styles.sideButtonsAlt} id="sideButtonsAlt" hidden>
                             <IconButton  aria-label="More">
-                                <MoreHorizIcon />
+                                <MoreHorizIcon sx={{color:"white"}}/>
                             </IconButton>
                         </div>
                         <Grid item xs={4}>
                             <Stack spacing={0} direction="row" alignItems="center" justifyContent={"center"}>
                                 <span>
                                     <IconButton sx={{ padding: "4px" }}  aria-label="Previous">
-                                        <PreviousIcon fontSize="large" />
+                                        <PreviousIcon sx={{color:"white"}} fontSize="large" />
                                     </IconButton>
                                 </span>
                                 <span id="play" onClick={(event) => this.play(event)}>
                                     <IconButton sx={{ padding: "4px" }} aria-label="Play">
-                                        <PlayIcon fontSize='large' />
+                                        <PlayIcon sx={{color:"white"}} fontSize='large' />
                                     </IconButton>
                                 </span>
                                 <span id="pause" onClick={(event) => this.pause(event)} aria-label="Pause" hidden>
                                     <IconButton sx={{ padding: "4px" }}>
-                                        <PauseIcon fontSize='large' />
+                                        <PauseIcon sx={{color:"white"}} fontSize='large' />
                                     </IconButton>
                                 </span>
                                 <span onClick={(event) => this.nextSong(event)}>
                                     <IconButton sx={{ padding: "4px" }} aria-label="Next">
-                                        <NextIcon fontSize="large" />
+                                        <NextIcon sx={{color:"white"}} fontSize="large" />
                                     </IconButton>
                                 </span>
                             </Stack>
@@ -408,19 +408,19 @@ export default class PlayerComponent extends React.Component {
                                 <div onClick={this.toggleMuteOrUnmute}>
                                     <span id="volumeon" >
                                         <IconButton aria-label="Volume On">
-                                            <VolumeUp />
+                                            <VolumeUp sx={{color:"white"}} />
                                         </IconButton>
                                     </span>
                                     <span id="volumeoff" onClick={this.toggleMuteOrUnmute} aria-label="Volume Off" hidden>
                                         <IconButton >
-                                            <VolumeOff />
+                                            <VolumeOff sx={{color:"white"}} />
                                         </IconButton>
                                     </span>
                                 </div>
                                 <div>
                                     <Popper style={{ "z-index": "12" }} id={this.state.id} open={this.state.open} anchorEl={this.state.anchorEl} transition>
                                         {({ TransitionProps }) => (
-                                            <Fade {...TransitionProps} timeout={200}>
+                                            <Fade {...TransitionProps} timeout={200} unmountOnExit in={false}>
                                                 <Box sx={{ height: 200, backgroundColor: "#33296d", borderRadius: "50px", padding: "10px", paddingLeft: "5px", paddingRight: "5px" }} >
                                                     <Slider
                                                         sx={{
