@@ -420,7 +420,7 @@ export default class PlayerComponent extends React.Component {
                                 <div>
                                     <Popper style={{ "z-index": "12" }} id={this.state.id} open={this.state.open} anchorEl={this.state.anchorEl} transition>
                                         {({ TransitionProps }) => (
-                                            <Fade {...TransitionProps} timeout={200} unmountOnExit in={false}>
+                                            <Fade {...TransitionProps} timeout={200}>
                                                 <Box sx={{ height: 200, backgroundColor: "#33296d", borderRadius: "50px", padding: "10px", paddingLeft: "5px", paddingRight: "5px" }} >
                                                     <Slider
                                                         sx={{

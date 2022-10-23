@@ -6,6 +6,11 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+
+h2 span p{
+  color:white;
+}
+
 a {
   color: inherit;
   text-decoration: none;
