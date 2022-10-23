@@ -10,8 +10,6 @@ import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
 import SearchIcon from '@mui/icons-material/Search';
 import CircularProgress from '@mui/material/CircularProgress';
-import { SongMetaData } from '../lib/interfaces';
-//import {SearchResultComponent} from '../components/search.js'
 import dynamic from 'next/dynamic';
 export const Home: NextPage = (props:any) => {
 const SearchResultComponent = dynamic(()=> import('../components/search.js'));
@@ -23,11 +21,11 @@ React.useEffect(() => {
   setHasMounted(true);
 }, [])
 const [playlistElement,setPlaylistElement] = React.useState<any>(<PlaylistComponent/>);
-const [searchResult,setsearchResult] = React.useState<any>(<SearchResultComponent/>);
+const [searchResult,setsearchResult] = React.useState<any>();
 const [player,setPlayer] = React.useState<any>(<PlayerComponent url={props.url}/>);
-
+/**
 React.useEffect(()=>{
-    /**
+    
     document.addEventListener("drag",(res:any)=>{
         if(res?.target?.id == "resizer" && res.clientX != 0 ){
             var page = document.getElementById("resultcontainer");
@@ -35,8 +33,8 @@ React.useEffect(()=>{
             page?.setAttribute("style",`width: ${Math.max(res.clientX,window.innerWidth-400)}px`)
             playlist?.setAttribute("style",`width: ${window.innerWidth-res.clientX}px`)
         }
-    }); */
-})
+    }); 
+})*/
 
 function Search(){
     var query:any = document.getElementById("searchinput");

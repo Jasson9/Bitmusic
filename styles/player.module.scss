@@ -60,6 +60,7 @@ $light-border: rgb(125, 125, 125);
     position: relative;
     justify-content: space-between;
     display: flex;
+    justify-content: flex-end;
     --bs-gutter-x: 1.5rem;
     padding-left: calc(var(--bs-gutter-x) * 0.5);
     margin-right: auto;
