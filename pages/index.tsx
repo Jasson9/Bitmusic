@@ -47,9 +47,10 @@ if (!hasMounted) {
     return null;
   }
   return (
-    <html>
+    <html lang={"en"}>
         <Head>
-            <title>Music Player</title>
+            <title>Bitmusic</title>
+            <meta name="description" content="A Youtube Music alternative without ad and no privacy worry"></meta>
             <meta charSet="UTF-8"></meta>
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
         </Head>
@@ -58,7 +59,7 @@ if (!hasMounted) {
                 <div className={[styles.navbar].join(" ")}>
                     <div className = {styles.titleContainer}>
                         <h1 className={styles.title} style={{margin: "0px",fontSize:"4vmin"}}>Bitmusic</h1>
-                        <span style={{fontSize:"2vmin",backgroundColor:"lightblue",borderRadius:"6px",padding:"5px",paddingTop:"2px",paddingBottom:"2px",marginLeft:"5px", fontWeight:"bold"}}>BETA</span>
+                        <span style={{fontSize:"2.3vmin", color: "#232020",backgroundColor:"lightblue",borderRadius:"6px",padding:"5px",paddingTop:"2px",paddingBottom:"2px",marginLeft:"5px", fontWeight:"bold"}}>BETA</span>
                     </div>
                     <div className={styles.navigationContainer}>
 
@@ -66,13 +67,13 @@ if (!hasMounted) {
                         <div className={styles.searchbarcontainer}>
                             <Box>
                             <Stack direction="row" alignItems="center" justifyContent="center">
-                                <Input id="searchinput" sx={{width:"40vmin",color:"aliceblue",paddingLeft:"5px",fontSize:"2.5vmin"}} style={{color:"aliceblue"}} onKeyDown={(event)=>event.keyCode===13&&!event.repeat?Search():""}/>
+                                <Input placeholder={"Enter song title"} id="searchinput" sx={{width:"40vmin",color:"aliceblue",paddingLeft:"5px",fontSize:"2.5vmin"}} style={{color:"aliceblue"}} onKeyDown={(event)=>event.keyCode===13&&!event.repeat?Search():""}/>
                                 <div  onClick={Search}>
-                                <IconButton >
+                                <IconButton  aria-label="Search">
                                     <SearchIcon id="searchIcon"/>
                                 </IconButton>
                                 </div>
-                                <div id="searchingIcon" hidden>
+                                <div id="searchingIcon" aria-label="Search loading" hidden>
                                     <CircularProgress size={"24px"}/>
                                 </div>
                             </Stack>

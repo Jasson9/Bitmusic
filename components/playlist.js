@@ -114,6 +114,7 @@ export default class PlaylistComponent extends React.Component {
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 540) {
             $("#sidecontainer").removeClass(styles.playlistcontainer);
             $("#sidecontainer").addClass(styles.playlistcontainermobile);
+            $("."+styles.playlistContents).attr("style","max-width:100%;")
             this.setState({ onMobile: true });
         } else {
             $("#sidecontainer").removeClass(styles.playlistcontainermobile);

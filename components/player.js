@@ -341,14 +341,14 @@ export default class PlayerComponent extends React.Component {
         return (<div id="musicplayer">
             <div className={styles.songMetaDataContainerAlt} id="songMetaDataContainerAlt" hidden>
                 <div className={styles.songInfoContainer}>
-                    <img id={styles.thumbnail} src={this.state.thumbnail}></img>
+                    {this.state.thumbnail?<img id={styles.thumbnailAlt} src={this.state.thumbnail} alt="thumbnail"></img>:""}
                     <div className={styles.musicInfoContainer}>
                         <div id={styles.songtitleAlt}>{this.state.title}</div>
                         <div id={styles.authorAlt}>{this.state.author}</div>
                     </div>
                 </div>
                 <div id="playlistbtnAlt" onClick={(event) => this.togglePlaylist(event)}>
-                    <IconButton>
+                    <IconButton  aria-label="Show Playlist">
                         <QueueMusicIcon />
                     </IconButton>
                 </div>
@@ -358,7 +358,7 @@ export default class PlayerComponent extends React.Component {
                     <div className={[styles.playertrack].join(" ")}>
                         <Stack spacing={1} direction="row" alignItems="center" sx={{ width: "75%" }}>
                             <output id="length">{parseTimeFromSeconds(this.state.elapsedTime.toString())}</output>
-                            <Slider style={{ padding: "8px" }} id="playbackslider" size='small' aria-label="playback" value={(this.state.elapsedTime / this.state.songLength) * 100} onChange={(event, newValue) => this.changePlaybackTime(event, newValue)} />
+                            <Slider style={{ padding: "8px" }} id="playbackslider" size='small' aria-label="playback" value={this.state.elapsedTime?(this.state.elapsedTime / this.state.songLength) * 100:0} onChange={(event, newValue) => this.changePlaybackTime(event, newValue)} />
                             <output id="length">{parseTimeFromSeconds(this.state.songLength.toString())}</output>
                         </Stack>
                         <audio id="audioSource" hidden preload='metadata' onTimeUpdate={this.updateElapseTime} onLoadedMetadata={this.updateSongLength} onEnded={this.onEnd}>
@@ -375,29 +375,29 @@ export default class PlayerComponent extends React.Component {
                             </div>
                         </div>
                         <div className={styles.sideButtonsAlt} id="sideButtonsAlt" hidden>
-                            <IconButton >
+                            <IconButton  aria-label="More">
                                 <MoreHorizIcon />
                             </IconButton>
                         </div>
                         <Grid item xs={4}>
                             <Stack spacing={0} direction="row" alignItems="center" justifyContent={"center"}>
                                 <span>
-                                    <IconButton sx={{ padding: "4px" }}>
+                                    <IconButton sx={{ padding: "4px" }}  aria-label="Previous">
                                         <PreviousIcon fontSize="large" />
                                     </IconButton>
                                 </span>
                                 <span id="play" onClick={(event) => this.play(event)}>
-                                    <IconButton sx={{ padding: "4px" }}>
+                                    <IconButton sx={{ padding: "4px" }} aria-label="Play">
                                         <PlayIcon fontSize='large' />
                                     </IconButton>
                                 </span>
-                                <span id="pause" onClick={(event) => this.pause(event)} hidden>
+                                <span id="pause" onClick={(event) => this.pause(event)} aria-label="Pause" hidden>
                                     <IconButton sx={{ padding: "4px" }}>
                                         <PauseIcon fontSize='large' />
                                     </IconButton>
                                 </span>
                                 <span onClick={(event) => this.nextSong(event)}>
-                                    <IconButton sx={{ padding: "4px" }}>
+                                    <IconButton sx={{ padding: "4px" }} aria-label="Next">
                                         <NextIcon fontSize="large" />
                                     </IconButton>
                                 </span>
@@ -407,11 +407,11 @@ export default class PlayerComponent extends React.Component {
                             <Stack spacing={1} direction="row" alignItems="center" justifyContent={"flex-end"}>
                                 <div onClick={this.toggleMuteOrUnmute}>
                                     <span id="volumeon" >
-                                        <IconButton >
+                                        <IconButton aria-label="Volume On">
                                             <VolumeUp />
                                         </IconButton>
                                     </span>
-                                    <span id="volumeoff" onClick={this.toggleMuteOrUnmute} hidden>
+                                    <span id="volumeoff" onClick={this.toggleMuteOrUnmute} aria-label="Volume Off" hidden>
                                         <IconButton >
                                             <VolumeOff />
                                         </IconButton>

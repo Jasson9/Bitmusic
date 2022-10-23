@@ -19,7 +19,11 @@ const nextConfig = {
   },
   env: {
     ROOT: __dirname,
-  }
+  },
+  i18n: {
+    locales: ['en'],
+    defaultLocale: 'en',
+  },
 }
 
 module.exports = nextConfig
