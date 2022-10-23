@@ -10,7 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { parseTimeFromSeconds } from "../lib/timeparser";
 import { getAudioInfo, fetchAudio } from './util'
 import { deleteSong, getPlaylist, setPlaylist, addSong } from './db'
-
+import Image from 'next/image';
 async function downloadSong(url,event) {
     event.preventDefault();
     event.stopPropagation();
@@ -125,7 +125,7 @@ const UseSearchSong = (props) => {
                     </div>
                     {results ? results.map((res, key) => <div key={key} className={[styles.resultcontainer, res.source].join(" ")} >
                         <div className={styles.thumbnailcontainer}>
-                            <img className={styles.resultthumbnail} src={res.thumbnail} onClick={(event) => addToPlaylist(key, event)} ></img>
+                            <Image className={styles.resultthumbnail} width={160} height={90} layout={"fixed"} src={res.thumbnail} alt={res.title} onClick={(event) => addToPlaylist(key, event)} ></Image>
                             <div className={styles.resultdurationtext}>{parseTimeFromSeconds(res.duration)}</div>
                         </div>
                         <div className={styles.resultdata}>
@@ -141,7 +141,7 @@ const UseSearchSong = (props) => {
                                 </div>
                                 <div onClick={(event) => downloadSong(res.url,event)} style={{zIndex:"9"}}  id={"DownloadIcon-" + res.url}>
                                     <IconButton>
-                                        <DownloadIcon sx={{color:"white"}} />
+                                        <DownloadIcon sx={{color:"white", fontSize:30}} />
                                     </IconButton>
                                 </div>
                                 <div id={"DownloadProgressIcon-" + res.url} style={{zIndex:"5"}}  hidden>

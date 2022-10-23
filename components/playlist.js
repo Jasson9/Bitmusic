@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/ClearRounded';
 import $ from 'jquery';
 import Slide from '@mui/material/Slide';
+import Image from 'next/image'
 var reg = new RegExp(/[?]v=(.+)/);
 export default class PlaylistComponent extends React.Component {
     constructor(props) {
@@ -162,11 +163,11 @@ export default class PlaylistComponent extends React.Component {
                 <div className={styles.resizeBar} id="resizer" title={""} ></div>
                 <div className={styles.playlistContents}>
                     <div className={styles.playlistHeadNav}>
-                        <div className={[styles.playlistNavButton,styles.toggleActive].join(" ")} id="playlistToggle" onClick={() => this.switchToPlaylist()}>
+                        <div className={[styles.playlistNavButton,styles.text,styles.toggleActive].join(" ")} id="playlistToggle" onClick={() => this.switchToPlaylist()}>
                             <h2>Playlist</h2>
                         </div>
                         <div style={{width:"1px",height:"40px",backgroundColor:"#06060661"}}></div>
-                        <div className={styles.playlistNavButton} id="lyricsToggle" onClick={() => this.switchToLyrics()}>
+                        <div className={[styles.playlistNavButton,styles.text].join(" ")} id="lyricsToggle" onClick={() => this.switchToLyrics()}>
                             <h2>Lyric</h2>
                         </div>
                     </div>
@@ -185,16 +186,18 @@ export default class PlaylistComponent extends React.Component {
                                         <ListItem>
                                             <ListItemButton sx={{ gap: 1 }}>
                                                 <div className={styles.playlistThumbcontainer}>
-                                                    <img
+                                                    <Image
                                                         className={styles.playlistThumb}
+                                                        height={36}
+                                                        width={64}
                                                         src={`${item.thumbnail}`}
                                                         srcSet={`${item.thumbnail}`}
                                                         alt={item.title}
                                                     />
                                                 </div>
                                                 <ListItemContent>
-                                                    <p className={this.state.onMobile ? styles.playlistSongTitleAlt : styles.playlistSongTitle}>{item.title}</p>
-                                                    <p className={this.state.onMobile ? styles.playlistSongAuthorAlt : styles.playlistSongAuthor}>{item.author}</p>
+                                                    <p className={[this.state.onMobile ? styles.playlistSongTitleAlt : styles.playlistSongTitle,styles.text].join(" ")}>{item.title}</p>
+                                                    <p className={[this.state.onMobile ? styles.playlistSongAuthorAlt : styles.playlistSongAuthor,styles.text].join(" ")}>{item.author}</p>
                                                 </ListItemContent>
                                                 {index == 0 ? "" :
                                                     <IconButton onClick={() => deleteSong(index)}>
@@ -210,10 +213,10 @@ export default class PlaylistComponent extends React.Component {
                         </Sheet>
                     </div>
                     <div className={styles.lyricsContainer} id="lyricscontainer" hidden>
-                        <div className={styles.lyricsLanguangeChooser}>
+                        <div className={[styles.lyricsLanguangeChooser,styles.text].join(" ")}>
                             {this.state.option}
                         </div>
-                        <span className={styles.lyrics} style={{ "whiteSpace": "pre-line" }}>{this.state.title}{this.state.displayLyrics}</span>
+                        <span className={[styles.lyrics,styles.text].join(" ")} style={{ "whiteSpace": "pre-line" }}>{this.state.title}{this.state.displayLyrics}</span>
                     </div>
                 </div>
             </div>

@@ -18,7 +18,7 @@ import styles from '../styles/player.module.scss'
 import { parseTimeFromSeconds } from '../lib/timeparser';
 import { addSong, getPlaylist, deleteSong } from './db'
 import { getAudioInfo, fetchAudio } from './util'
-import $ from 'jquery';
+import Image from 'next/image';
 export default class PlayerComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -341,7 +341,7 @@ export default class PlayerComponent extends React.Component {
         return (<div id="musicplayer">
             <div className={styles.songMetaDataContainerAlt} id="songMetaDataContainerAlt" hidden>
                 <div className={styles.songInfoContainer}>
-                    {this.state.thumbnail?<img id={styles.thumbnailAlt} src={this.state.thumbnail} alt="thumbnail"></img>:""}
+                    {this.state.thumbnail?<Image id={styles.thumbnail} height={36} width={64} src={this.state.thumbnail} alt="thumbnail"></Image>:""}
                     <div className={styles.musicInfoContainer}>
                         <div id={styles.songtitleAlt}>{this.state.title}</div>
                         <div id={styles.authorAlt}>{this.state.author}</div>
@@ -357,9 +357,9 @@ export default class PlayerComponent extends React.Component {
                 <div className={[styles.playercontents].join(" ")}>
                     <div className={[styles.playertrack].join(" ")}>
                         <Stack spacing={1} direction="row" alignItems="center" sx={{ width: "75%" }}>
-                            <output id="length">{parseTimeFromSeconds(this.state.elapsedTime.toString())}</output>
+                            <output id="length" className={styles.text}>{parseTimeFromSeconds(this.state.elapsedTime.toString())}</output>
                             <Slider style={{ padding: "8px" }} id="playbackslider" size='small' aria-label="playback" value={this.state.elapsedTime?(this.state.elapsedTime / this.state.songLength) * 100:0} onChange={(event, newValue) => this.changePlaybackTime(event, newValue)} />
-                            <output id="length">{parseTimeFromSeconds(this.state.songLength.toString())}</output>
+                            <output id="length" className={styles.text}>{parseTimeFromSeconds(this.state.songLength.toString())}</output>
                         </Stack>
                         <audio id="audioSource" hidden preload='metadata' onTimeUpdate={this.updateElapseTime} onLoadedMetadata={this.updateSongLength} onEnded={this.onEnd}>
                             <source id='webmSource' src={this.state.webmurl} type='audio/webm' />
@@ -368,7 +368,7 @@ export default class PlayerComponent extends React.Component {
                     </div>
                     <Grid container spacing={0} alignContent={"center"} flexWrap={"nowrap"} alignItems={"center"} justifyContent={"center"}>
                         <div className={styles.musicMetaDataContainer}>
-                            <img id={styles.thumbnail} src={this.state.thumbnail}></img>
+                            {this.state.thumbnail?<Image id={styles.thumbnail} src={this.state.thumbnail} height={45} width={80} alt={""}></Image>:""}
                             <div className={styles.musicInfoContainer}>
                                 <div id={styles.songtitle}>{this.state.title}</div>
                                 <div id={styles.author}>{this.state.author}</div>
@@ -387,13 +387,13 @@ export default class PlayerComponent extends React.Component {
                                     </IconButton>
                                 </span>
                                 <span id="play" onClick={(event) => this.play(event)}>
-                                    <IconButton sx={{ padding: "4px" }} aria-label="Play">
-                                        <PlayIcon sx={{color:"white"}} fontSize='large' />
+                                    <IconButton sx={{ padding: "4px" }}  aria-label="Play">
+                                        <PlayIcon sx={{color:"white", fontSize:40}} />
                                     </IconButton>
                                 </span>
                                 <span id="pause" onClick={(event) => this.pause(event)} aria-label="Pause" hidden>
                                     <IconButton sx={{ padding: "4px" }}>
-                                        <PauseIcon sx={{color:"white"}} fontSize='large' />
+                                        <PauseIcon sx={{color:"white", fontSize:40}} fontSize='large' />
                                     </IconButton>
                                 </span>
                                 <span onClick={(event) => this.nextSong(event)}>
@@ -442,7 +442,7 @@ export default class PlayerComponent extends React.Component {
                                     </Popper>
                                 </div>
                                 <Slider aria-label="Volume" value={this.state.volume} onChange={(event, newValue) => this.changeVolume(event, newValue)} id="volumeslider" sx={{ maxWidth: "240px" }} />
-                                <output id="volume-output">{this.state.volume}</output>
+                                <output id="volume-output" className={styles.text}>{this.state.volume}</output>
                             </Stack>
                         </Grid>
                     </Grid>
