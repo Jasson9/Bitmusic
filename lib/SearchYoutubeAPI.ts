@@ -1,6 +1,6 @@
-import {parseYTTimeFromString} from './timeparser'
-import fetch from 'node-fetch'
-
+import {parseYTTimeFromString} from './timeparser';
+import fetch from 'node-fetch';
+import {AudioSearchResponse,AudioInfoResponse} from './interfaces';
 async function SearchKeyword(keyword:string):Promise<Array<any>> {
     console.log(keyword)
     var res:Response = await fetch("https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8&prettyPrint=false",{
@@ -46,7 +46,7 @@ async function SearchKeyword(keyword:string):Promise<Array<any>> {
             }
         }
     }
-    var videos = [];
+    var videos:Array<AudioSearchResponse> = [];
     for(var i = 0; i < result.length; i++){
     if(result[i]?.videoRenderer?.title?.runs[0]?.text&&result[i]?.videoRenderer?.thumbnail?.thumbnails[0]?.url&&result[i]?.videoRenderer?.ownerText?.runs[0]?.text&&result[i]?.videoRenderer?.videoId&&result[i]?.videoRenderer?.lengthText?.simpleText){
         videos.push({
@@ -55,7 +55,8 @@ async function SearchKeyword(keyword:string):Promise<Array<any>> {
             author:result[i].videoRenderer.ownerText.runs[0].text,
             url: "https://www.youtube.com/watch?v="+result[i].videoRenderer.videoId,
             duration: parseYTTimeFromString(result[i].videoRenderer.lengthText.simpleText),
-            source:"youtube"
+            source:"youtube",
+            formats:null
             })
     }else{
         console.log("Null on\n"+result[i].videoRenderer);
@@ -101,15 +102,16 @@ export async function searchMusicKeyword(query:string){
             }
         }
     }
-    var results:any = [];
+    var results:Array<AudioSearchResponse> = [];
     songs.forEach((song:any) => {
         results.push({
-            url:"https://www.youtube.com/watch?v="+song.musicResponsiveListItemRenderer.playlistItemData.videoId,
+            url: "https://www.youtube.com/watch?v="+song?.musicResponsiveListItemRenderer?.playlistItemData?.videoId,
             title:song.musicResponsiveListItemRenderer.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].text,
             author:song.musicResponsiveListItemRenderer.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs[0].text,
             duration: parseYTTimeFromString(song.musicResponsiveListItemRenderer.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs[song.musicResponsiveListItemRenderer.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs.length-1].text,"."),
             thumbnail: "https://i.ytimg.com/vi/"+song.musicResponsiveListItemRenderer.playlistItemData.videoId+"/maxresdefault.jpg",
-            source:"youtube-music"
+            source:"youtube-music",
+            formats:null
         })
     });
     //song.musicResponsiveListItemRenderer.thumbnail.musicThumbnailRenderer.thumbnail.thumbnails[song.musicResponsiveListItemRenderer.thumbnail.musicThumbnailRenderer.thumbnail.thumbnails.length-1].url

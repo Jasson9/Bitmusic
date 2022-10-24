@@ -190,6 +190,7 @@ export default class PlaylistComponent extends React.Component {
                                                         className={styles.playlistThumb}
                                                         height={36}
                                                         width={64}
+                                                        objectFit={"scale-down"}
                                                         src={`${item.thumbnail}`}
                                                         srcSet={`${item.thumbnail}`}
                                                         alt={item.title}

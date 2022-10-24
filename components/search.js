@@ -125,7 +125,7 @@ const UseSearchSong = (props) => {
                     </div>
                     {results ? results.map((res, key) => <div key={key} className={[styles.resultcontainer, res.source].join(" ")} >
                         <div className={styles.thumbnailcontainer}>
-                            <Image className={styles.resultthumbnail} width={160} height={90} layout={"fixed"} src={res.thumbnail} alt={res.title} onClick={(event) => addToPlaylist(key, event)} ></Image>
+                            <Image className={styles.resultthumbnail} width={160} height={90} layout={"fixed"} objectFit={"scale-down"} src={res.thumbnail} alt={res.title} onClick={(event) => addToPlaylist(key, event)} ></Image>
                             <div className={styles.resultdurationtext}>{parseTimeFromSeconds(res.duration)}</div>
                         </div>
                         <div className={styles.resultdata}>
@@ -139,7 +139,7 @@ const UseSearchSong = (props) => {
                                         <PlayIcon sx={{color:"white"}} />
                                     </IconButton>
                                 </div>
-                                <div onClick={(event) => downloadSong(res.url,event)} style={{zIndex:"9"}}  id={"DownloadIcon-" + res.url}>
+                                <div onClick={(event) => downloadSong(res,event)} style={{zIndex:"9"}}  id={"DownloadIcon-" + res.url}>
                                     <IconButton>
                                         <DownloadIcon sx={{color:"white", fontSize:30}} />
                                     </IconButton>

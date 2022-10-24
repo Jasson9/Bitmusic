@@ -1,27 +1,8 @@
 import { StringifyOptions } from 'querystring'
 import ytdl from 'ytdl-core'
-class YtVideoResponse{
-    videoId:string
-    title:string
-    length:string
-    thumbnail:string
-    author:string
-    formats:Array<any>
-    needProxy:boolean
-    source :string
-    constructor(videoId:string,title:string,length:string,thumbnail:string,author:string,formats:Array<any>,source:string,needProxy:boolean){
-        this.videoId = videoId
-        this.title = title
-        this.length = length
-        this.thumbnail = thumbnail
-        this.author = author
-        this.formats = formats
-        this.needProxy = needProxy
-        this.source = source
-    }
-}
+import {AudioInfoResponse} from './interfaces'
 
-export async function fetchAudioInfoYtdl(url:string):Promise<YtVideoResponse>{
+export async function fetchAudioInfoYtdl(url:string):Promise<AudioInfoResponse>{
     var info:ytdl.videoInfo = await ytdl.getInfo(url); 
     let audioFormats = ytdl.filterFormats(info.formats,'audioonly');
     var needProxy = false;
@@ -31,7 +12,16 @@ export async function fetchAudioInfoYtdl(url:string):Promise<YtVideoResponse>{
             break;
         }
     }
-    return  new YtVideoResponse( info.videoDetails.videoId,info.videoDetails.title,info.videoDetails.lengthSeconds,info.videoDetails.thumbnails[info.videoDetails.lengthSeconds,info.videoDetails.thumbnails.length-1].url,info.videoDetails.author.name,audioFormats,"test",needProxy);
+    return  ({
+        url:"https://www.youtube.com/watch?v="+info.videoDetails.videoId,
+        title:info.videoDetails.title,
+        length:info.videoDetails.lengthSeconds,
+        thumbnail:info.videoDetails.thumbnails[info.videoDetails.lengthSeconds,info.videoDetails.thumbnails.length-1].url,
+        author:info.videoDetails.author.name,
+        formats:audioFormats,
+        source:"youtube",
+        needProxy
+    })
 }
 
 //signedchipher issue
@@ -98,6 +88,3 @@ export async function fetchAudioInfo(url:string):Promise<YtVideoResponse>{
     )
     
 } */
-
-
-export { YtVideoResponse};

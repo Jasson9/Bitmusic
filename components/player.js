@@ -17,7 +17,7 @@ import React from 'react';
 import styles from '../styles/player.module.scss'
 import { parseTimeFromSeconds } from '../lib/timeparser';
 import { addSong, getPlaylist, deleteSong } from './db'
-import { getAudioInfo, fetchAudio } from './util'
+import { getAudioInfo, fetchAudio ,downloadFromChunks} from './util'
 import Image from 'next/image';
 export default class PlayerComponent extends React.Component {
     constructor(props) {
@@ -38,7 +38,9 @@ export default class PlayerComponent extends React.Component {
             onMobile: null,
             isStopped: true,
             webmurl: "",
-            mp4url: ""
+            mp4url: "",
+            mp3url:"",
+            hlsurl:""
         };
         this.updateSongLength = this.updateSongLength.bind(this);
         this.updateElapseTime = this.updateElapseTime.bind(this);
@@ -63,53 +65,62 @@ export default class PlayerComponent extends React.Component {
             var res = await getAudioInfo(url).catch(err => {
                 console.error(err);
             });
-            var audioitag;
-            var webm = [];
-            var mp4;
-            res.formats.forEach((format) => {
-                if (/audio\/webm/.test(format.mimeType)) {
-                    webm.push(format);
-                } else {
-                    if (/audio\/mp4/.test(format.mimeType)) {
-                        mp4 = format;
-                    }
-                }
-            })
             var audioelm = document.querySelector("#audioSource");
+            var source;
+            var WebmSupport = audioelm.canPlayType('audio/webm');
+            if(WebmSupport){
+                source = document.getElementById("webmSource");
+            }else{
+                source = document.getElementById("mp4Source");
+            }
             var sourceurl;
-            if (res.needProxy) {
-                console.log("using Proxy " + res.videoId);
-                var source;
-                if (audioelm?.canPlayType('audio/webm') && webm.length >= 1) {
-                    audioitag = webm[webm.length - 1].itag;
-                    source = document.getElementById("webmSource");
-                } else {
-                    audioitag = mp4.itag;
-                    source = document.getElementByUd("mp4Source");
+            if(res.source=='soundcloud'){
+                if(res.formats[0].type=='hls'){
+                    source = document.getElementById('mp3Source')
+                    var audiourl = await downloadFromChunks(res.formats[0].urls.urls) 
+                    this.setState({
+                        mp3url:audiourl
+                    })
+                    //source.setAttribute("src", sourceurl);
                 }
-                var sourceurl = await fetchAudio(res.videoId, res.formats[res.formats.length - 1].itag);
-                source.setAttribute("src", sourceurl);
-            } else {
-                console.log("Direct Download " + res.videoId);
-                var source;
-                if (audioelm?.canPlayType('audio/webm') && webm.length >= 1) {
-                    source = document.getElementById("webmSource");
-                    if (webm[1]) {
-                        this.setState({ webmurl: webm[1].url });
-                        //source.setAttribute("src",webm[1].url);
+            }
+            if(res.source=='youtube'){
+                var audioitag;
+                var webm = [];
+                var mp4;
+                res.formats.forEach((format) => {
+                    if (/audio\/webm/.test(format.mimeType)) {
+                        webm.push(format);
                     } else {
-                        this.setState({ webmurl: webm[0].url });
-                        //source.setAttribute("src",webm[0].url);
+                        if (/audio\/mp4/.test(format.mimeType)) {
+                            mp4 = format;
+                        }
                     }
-                } else {
-                    if (mp4) {
-                        this.setState({ mp4url: mp4.url });
+                })
+                if (res.needProxy) {
+                    console.log("using Proxy " + res.url);
+                    if ( webm.length >= 1 && WebmSupport) {
+                        audioitag = webm[webm.length - 1].itag;
                     } else {
-                        console.error("No audio found on this video");
-                        return null
+                        audioitag = mp4.itag;
+                    }
+                    var sourceurl = await fetchAudio(res.url, res.formats[res.formats.length - 1].itag);
+                    source.setAttribute("src", sourceurl);
+                } else {
+                    console.log("Direct Download " + res.videoId);
+                    if ( webm.length >= 1) {
+                        this.setState({ webmurl: webm[webm.length-1].url });
+                    } else {
+                        if (mp4) {
+                            this.setState({ mp4url: mp4.url });
+                        } else {
+                            console.error("No audio found on this video");
+                            return null;
+                        }
                     }
                 }
             }
+            console.log(res);
             //will be changed for better logic
             audioelm.load();
             this.setState({
@@ -174,13 +185,13 @@ export default class PlayerComponent extends React.Component {
 
     onEnd() {
         this.pause();
-        this.setState({ isStopped: true, title: "", author: "", thumbnail: "", url: "", elapsedTime: 0, songLength:0,webmurl: "" , mp4url:""});
+        this.setState({ isStopped: true, hlsurl:"", title: "", author: "", thumbnail: "", url: "", elapsedTime: 0, songLength:0,webmurl: "" , mp4url:"", mp3url:""});
         this.clearSrc();
         //this.setState({isStopped:true})
         console.log(this.state.isStopped)
         var playlist = deleteSong(0);
         if (playlist == null || playlist.length == 0) {
-            this.setState({ isStopped: true, title: "no music", author: "add music to playlist and start listening", thumbnail: "", url: "", elapsedTime: 0, songLength:0,webmurl: "" , mp4url:""});
+            this.setState({ isStopped: true, hlsurl:"", mp3url:"", title: "no music", author: "add music to playlist and start listening", thumbnail: "", url: "", elapsedTime: 0, songLength:0,webmurl: "" , mp4url:""});
             return
         }
         this.fetchSongData(playlist[0]?.url, true);
@@ -214,14 +225,14 @@ export default class PlayerComponent extends React.Component {
         this.setState({ isStopped: true });
         var playlist = deleteSong(0);
         if (playlist != null && playlist.length >= 1) {
-            this.setState({ isStopped: true, title: "loading...", songLength:0, author: "", thumbnail: "", url: "", elapsedTime: 0, webmurl: "" , mp4url:""});
+            this.setState({ isStopped: true, hlsurl:"", title: "loading...", songLength:0, author: "", thumbnail: "", url: "", elapsedTime: 0, webmurl: "" , mp4url:"", mp3url:""});
             this.fetchSongData(playlist[0]?.url, true);
             this.setState({ isStopped: false });
             window.dispatchEvent(new Event("songChange"));
         } else {
             if (playlist?.length == 0) {
                 this.clearSrc();
-                this.setState({ isStopped: true, title: "no music", author: "add music to playlist and start listening", songLength:0 ,thumbnail: "", url: "", elapsedTime: 0, webmurl: "" , mp4url:""});
+                this.setState({ isStopped: true, hlsurl:"", title: "no music", author: "add music to playlist and start listening", songLength:0 ,thumbnail: "", url: "", elapsedTime: 0, webmurl: "" , mp4url:"",mp3url:""});
                 //pop up message no songs left and stop player;
             }
         }
@@ -364,6 +375,8 @@ export default class PlayerComponent extends React.Component {
                         <audio id="audioSource" hidden preload='metadata' onTimeUpdate={this.updateElapseTime} onLoadedMetadata={this.updateSongLength} onEnded={this.onEnd}>
                             <source id='webmSource' src={this.state.webmurl} type='audio/webm' />
                             <source id="mp4Source" src={this.state.mp4url} type='audio/mp4' />
+                            <source id="mp3Source" src={this.state.mp3url} type='audio/mp3' />
+                            <source id="hlsSource" src={this.state.hlsurl} type="audio/mpegurl"/>
                         </audio>
                     </div>
                     <Grid container spacing={0} alignContent={"center"} flexWrap={"nowrap"} alignItems={"center"} justifyContent={"center"}>

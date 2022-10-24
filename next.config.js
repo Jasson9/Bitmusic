@@ -15,7 +15,7 @@ const nextConfig = {
     
   },
   images: {
-    domains: ['i.ytimg.com'],
+    domains: ['i.ytimg.com','i1.sndcdn.com'],
   },
   env: {
     ROOT: __dirname,
