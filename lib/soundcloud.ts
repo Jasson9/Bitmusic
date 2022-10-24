@@ -116,7 +116,7 @@ export async function getAudioPageInfo(url:string):Promise<AudioInfoResponse>{
         url:url,
         title:data[data.length-1].data.title,
         author: data[data.length-1].data.user.permalink,
-        thumbnail:data[data.length-1].data.artwork_url||data[data.length-1].data.song.user.avatar_url,
+        thumbnail:data[data.length-1].data.artwork_url||data[data.length-1].data.user.avatar_url,
         length:Math.round(data[data.length-1].data.full_duration/1000)
     });
 }

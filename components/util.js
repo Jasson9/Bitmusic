@@ -4,20 +4,19 @@ export async function getAudioInfo(url){
     var res = (await r.json()).data;
     return res;
 }
-// slow should be changed later
+
 export async function downloadFromChunks(urls){
-    var blobres = new Blob();
-    console.log(urls)
-    for(var i = 0 ; i < urls.length; i++){
-        var res = await fetch(urls[i],{
-            method:"GET"
-        }).catch(err=>{
-            console.log(err);
-        });
-        var blob = await res.blob();
-        blobres = new Blob([blobres,blob]);
-    }
-    return URL.createObjectURL(blobres);
+    var blobs = await Promise.all(urls.map(async url => {
+            let res = await fetch(url,{
+                method:"GET"
+            })
+            .catch(err=>{
+                console.log(err);
+            });
+            var blob = await res.blob();
+            return blob;
+    }))
+    return URL.createObjectURL(new Blob(blobs));
 }
 
 export async function downloadSong(res,event) {
