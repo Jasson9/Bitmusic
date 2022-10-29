@@ -1,8 +1,6 @@
 import fetch from "node-fetch"
 
-
 export async function getLyricsFromYTMusicId(VideoId:string){
-
     var res:any = await  fetch("https://music.youtube.com/youtubei/v1/next?prettyPrint=false",{
         method:"POST",
         body:JSON.stringify({

@@ -5,7 +5,6 @@ export async function translateAutoEn(input:string){
      t = t.replaceAll("\\n","\\\\n");
      t = t.replaceAll("\\r","");
      t = t.replaceAll('"',"");
-    console.log(t);
 
     var body = await  fetch("https://translate.google.co.id/_/TranslateWebserverUi/data/batchexecute?rpcids=MkEWBc&source-path=%2F&bl=boq_translate-webserver_20221018.05_p0&hl=id&soc-app=1&soc-platform=1&soc-device=1&rt=c", {
     "headers": {

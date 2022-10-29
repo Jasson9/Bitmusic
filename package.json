@@ -14,7 +14,6 @@
     "@mui/joy": "^5.0.0-alpha.50",
     "@mui/material": "^5.10.9",
     "@types/jquery": "^3.5.14",
-    "cheerio": "^1.0.0-rc.12",
     "jquery": "^3.6.1",
     "kuroshiro": "^1.2.0",
     "kuroshiro-analyzer-kuromoji": "^1.1.0",
