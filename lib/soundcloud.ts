@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import {load} from 'cheerio';
 import { AudioSearchResponse, AudioInfoResponse } from './interfaces';
 var clientregex = new RegExp(/client_id:"(.+?)"/);
 
@@ -72,12 +71,9 @@ export async function searchSong(keyword:string){
         });
     });
     console.log(songs);
-    //console.log(data);
     return songs;
 }
 
-
-//https://m.soundcloud.com/dhproduction-indonesia/hingga-tua-bersama
 export async function getAudioPageInfo(url:string):Promise<AudioInfoResponse>{
     var body = await fetch(url, {
     "headers": {
@@ -121,10 +117,6 @@ export async function getAudioPageInfo(url:string):Promise<AudioInfoResponse>{
     });
 }
 
-//probably not needed
-//baseurl: https://api-mobi.soundcloud.com/media/soundcloud:tracks:1051250587/656bcfaa-3824-4690-841d-ca9c4325b76a/stream/hls
-//param1: client_id=iZIs9mchVcX5lhVRyQGGAYlNPVldzAoX
-//param2: track_authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJnZW8iOiJJRCIsInN1YiI6IiIsInJpZCI6IjM1NTFiY2NhLWExZjMtNDg4Yi1hZTE2LWZjYWNkMWY2MGQzZCIsImlhdCI6MTY2NjM4MDk2Mn0.a_2QBKzVe8zskorKxGDbfwaRO1BcntPRy76gCqFzFNA
 export async function getAudioUrl(url:string){
     var body = await fetch(url, {
     "headers": {
@@ -148,7 +140,6 @@ export async function getAudioUrl(url:string){
         console.log(err);
         return null
     });
-    console.log(res)
     if(res["url"]){
         return res["url"];
     }

@@ -1,6 +1,3 @@
-
-var stringRegex = new RegExp(/(.*.)-(..)-(..)T(..):(..):(..)/);
-
 function parseYTTimeFromString(TimeString:string, regexstring:string=":"){
     var timeArr = TimeString.split(regexstring);
     var seconds = 0;

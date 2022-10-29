@@ -1,4 +1,3 @@
-import { StringifyOptions } from 'querystring'
 import ytdl from 'ytdl-core'
 import {AudioInfoResponse} from './interfaces'
 
